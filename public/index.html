@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+  <!--l2d-->
+  <script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
+  <script>
+    var jsonModel = [
+      "../KKN/normal/model.json",
+        //"../Ganyu/motions/Ganyu.physics3.json",
+    ];
+    L2Dwidget.init({
+      "model": {
+        "jsonPath": jsonModel[Math.floor(Math.random()*(jsonModel.length))],
+        "scale": 1
+      },
+      "display": {
+        "position": "right", // 位置left、right
+        "width": 350, // 宽度
+        "opacity": 80,
+        "height": 500, // 高度
+        "hOffset": -250, // 横向边距
+        "vOffset": -550 // 纵向边距
+      },
+      "mobile": {
+        "width": 150, // 宽度
+        "height": 180, // 高度
+        "show": false // 手机是否显示
+      },
+    });
+  </script>
+</html>
