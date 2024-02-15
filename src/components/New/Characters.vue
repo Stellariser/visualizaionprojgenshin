@@ -344,9 +344,9 @@ export default {
               {name: 'ATK', max: 500},
               {name: 'DEF', max: 1000},
               {name: 'HP', max: 20000},
-              {name: 'Elemental Mastery', max: 50},
-              {name: 'Healing Bonus', max: 50},
-              {name: 'Energy Recharge', max: 50},
+              {name: 'Energy Recharge', max: 1.5},
+              {name: 'Elemental Mastery', max: 100},
+              {name: 'Healing Bonus', max: 0.3},
               {name: 'Shield', max: 50},
               {name: 'Ancillary', max: 50},
             ],
@@ -538,18 +538,21 @@ export default {
       this.radarChart = echarts.init(document.getElementById(id));
       console.log(index,"index!!!!!");
       console.log(this.characters,"name!!!!!");
-      console.log(this.characters[index ],"name!!!!!");
+      console.log(this.characters[index],"name!!!!!");
       let radarValues = [
-        this.characters[index].stats.atk_90_90, // 假设这是ATK的值
-        this.characters[index].stats.def_90_90, // 假设这是DEF的值
-        this.characters[index].stats.hp_90_90, // 假设这是HP的值
-        // this.character.stats.elemental_mastery, // 假设这是Elemental Mastery的值
-        // this.character.stats.healing_bonus, // 假设这是Healing Bonus的值
-        // this.character.stats.energy_recharge, // 假设这是Energy Recharge的值
+        this.characters[index].stats.atk_90_90_ac, // 假设这是ATK的值
+        this.characters[index].stats.def_90_90_ac, // 假设这是DEF的值
+        this.characters[index].stats.hp_90_90_ac, // 假设这是HP的值
+        this.characters[index].stats.energy_recharge, // 假设这是Energy Recharge的值
+        this.characters[index].stats.elemental_mastery, // 假设这是Elemental Mastery的值
+        this.characters[index].stats.healing_bonus, // 假设这是Healing Bonus的值
         // this.character.stats.shield_strength, // 假设这是Shield Strength的值
+        0,
         // this.character.stats.ancillary_stats, // 假设这是Ancillary Stats的值
+        0
         // 确保顺序与radar.indicator中定义的指标相匹配
-        35.238, 27.85, 19.25, 30, 20.47
+        // 35.238, 27.85, 19.25, 30, 
+        // 20.47
       ];
       let optionradarnow = {
         color: ['#67F9D8', '#f65353', '#56A3F1', '#FF917C'],
@@ -579,9 +582,9 @@ export default {
               {name: 'ATK', max: 500},
               {name: 'DEF', max: 1000},
               {name: 'HP', max: 20000},
-              {name: 'Elemental Mastery', max: 50},
-              {name: 'Healing Bonus', max: 50},
-              {name: 'Energy Recharge', max: 50},
+              {name: 'Energy Recharge', max: 1.5},
+              {name: 'Elemental Mastery', max: 120},
+              {name: 'Healing Bonus', max: 0.3},
               {name: 'Shield', max: 50},
               {name: 'Ancillary', max: 50},
             ],
@@ -641,7 +644,7 @@ export default {
 
     loadCSVData() {
       return new Promise((resolve, reject) => {
-        fetch('./data/genshin.csv')
+        fetch('./data/genshinv1.csv')
             .then(response => response.text())
             .then(csvData => {
               Papa.parse(csvData, {
@@ -665,6 +668,9 @@ export default {
                         kr: character.voice_kr,
                       },
                       stats: {
+                        hp_90_90_ac: character.hp_90_90_ac,
+                        atk_90_90_ac: character.atk_90_90_ac,
+                        def_90_90_ac: character.def_90_90_ac,
                         hp_90_90: character.hp_90_90,
                         atk_90_90: character.atk_90_90,
                         def_90_90: character.def_90_90,
@@ -707,6 +713,9 @@ export default {
                         hp_1_20:character.hp_1_20,
                         atk_1_20:character.atk_1_20,
                         def_1_20:character.def_1_20,
+                        elemental_mastery:character.elem_mastery_ac,
+                        energy_recharge:character.elem_recharge_ac,
+                        healing_bonus:character.heal_bns_ac
                       },
                       releaseDate: character.release_date,
                       weaponType: character.weapon_type,
