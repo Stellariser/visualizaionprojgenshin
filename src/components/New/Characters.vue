@@ -1,5 +1,14 @@
 <template>
   <el-container>
+   <el-header>
+    <el-select v-model="selectedSort" placeholder="请选择排序方式" @change="sortCharacters">
+      <el-option label="ordered by id" value=""></el-option>
+      <el-option label="ordered by attack" value="atk_90_90_ac"></el-option>
+      <el-option label="ordered by defense" value="def_90_90_ac"></el-option>
+      <el-option label="ordered by hp" value="hp_90_90_ac"></el-option>
+
+    </el-select>
+  </el-header>
     <el-dialog
         title="Character Details"
         v-model:visible="centerDialogVisible"
@@ -89,8 +98,6 @@ export default {
     //   }
     //
     // });
-
-
     this.loadCSVData().then(() => {
       // 确保此时数据已加载
       this.sortedAndFilteredCharacters();
@@ -308,6 +315,11 @@ export default {
       detailavatat:'',
 
       characters: [],         // 角色列表
+      //selectedSort: null,     //
+      selectedSort: (() => {
+        const savedSort = localStorage.getItem('selectedSort');
+        return savedSort ? savedSort : ''; // 如果 localStorage 中有值则使用，否则使用默认值
+      })(),
 
       rendercharacter: [],   // 渲染角色列表
 
@@ -400,6 +412,9 @@ export default {
           }
         ]
       }
+    
+    
+
     };
   },
   methods: {
@@ -430,10 +445,42 @@ export default {
       //
       // // 应用排序逻辑
       // // 例如，根据某个属性进行排序
-      // result.sort((a, b) => {
-      //   // 返回-1, 0, 或1来决定排序
-      //   return a.someAttribute - b.someAttribute;
-      // });
+      if (this.selectedSort === 'atk_90_90_ac')
+      {
+      result.sort((a, b) => {
+      // 返回-1, 0, 或1来决定排序
+              // 如果a的id为空，则将a视为大于b
+        if (!a.id) return 1; // 将a移动到数组末尾
+        // 如果b的id为空，则将b视为大于a
+        if (!b.id) return -1; // 将b移动到数组末尾
+
+         return a.stats.atk_90_90_ac - b.stats.atk_90_90_ac;
+       });
+      }
+      else if (this.selectedSort === 'def_90_90_ac')
+      {
+      result.sort((a, b) => {
+      // 返回-1, 0, 或1来决定排序
+              // 如果a的id为空，则将a视为大于b
+        if (!a.id) return 1; // 将a移动到数组末尾
+        // 如果b的id为空，则将b视为大于a
+        if (!b.id) return -1; // 将b移动到数组末尾
+
+         return a.stats.def_90_90_ac - b.stats.def_90_90_ac;
+       });
+      }
+      else if (this.selectedSort === 'hp_90_90_ac')
+      {
+      result.sort((a, b) => {
+      // 返回-1, 0, 或1来决定排序
+              // 如果a的id为空，则将a视为大于b
+        if (!a.id) return 1; // 将a移动到数组末尾
+        // 如果b的id为空，则将b视为大于a
+        if (!b.id) return -1; // 将b移动到数组末尾
+
+         return a.stats.hp_90_90_ac - b.stats.hp_90_90_ac;
+       });
+      }
 
       this.rendercharacter = result;
       console.log(this.rendercharacter, 'rendercharacter');
@@ -834,7 +881,21 @@ export default {
   computed: {
 
 
+  },
+  
+  watch: {
+  selectedSort(newVal, oldVal) {
+    if (newVal !== oldVal) {
+      console.log(oldVal,"oldVal");
+      console.log(newVal,"newVal");
+
+      localStorage.setItem('selectedSort', newVal);
+      // 当selectedSort变化时，刷新页面
+      window.location.reload();
+    }
   }
+},
+
 }
 </script>
 
