@@ -1,5 +1,14 @@
 <template>
   <el-container>
+   <el-header>
+    <el-select v-model="selectedSort" placeholder="请选择排序方式" @change="sortCharacters">
+      <el-option label="ordered by id" value=""></el-option>
+      <el-option label="ordered by attack" value="atk_90_90_ac"></el-option>
+      <el-option label="ordered by defense" value="def_90_90_ac"></el-option>
+      <el-option label="ordered by hp" value="hp_90_90_ac"></el-option>
+
+    </el-select>
+  </el-header>
     <el-dialog
         title="Character Details"
         v-model:visible="centerDialogVisible"
@@ -89,8 +98,6 @@ export default {
     //   }
     //
     // });
-
-
     this.loadCSVData().then(() => {
       // 确保此时数据已加载
       this.sortedAndFilteredCharacters();
@@ -308,6 +315,11 @@ export default {
       detailavatat:'',
 
       characters: [],         // 角色列表
+      //selectedSort: null,     //
+      selectedSort: (() => {
+        const savedSort = localStorage.getItem('selectedSort');
+        return savedSort ? savedSort : ''; // 如果 localStorage 中有值则使用，否则使用默认值
+      })(),
 
       rendercharacter: [],   // 渲染角色列表
 
@@ -344,9 +356,9 @@ export default {
               {name: 'ATK', max: 500},
               {name: 'DEF', max: 1000},
               {name: 'HP', max: 20000},
-              {name: 'Elemental Mastery', max: 50},
-              {name: 'Healing Bonus', max: 50},
-              {name: 'Energy Recharge', max: 50},
+              {name: 'Energy Recharge', max: 1.5},
+              {name: 'Elemental Mastery', max: 100},
+              {name: 'Healing Bonus', max: 0.3},
               {name: 'Shield', max: 50},
               {name: 'Ancillary', max: 50},
             ],
@@ -400,6 +412,9 @@ export default {
           }
         ]
       }
+    
+    
+
     };
   },
   methods: {
@@ -430,10 +445,42 @@ export default {
       //
       // // 应用排序逻辑
       // // 例如，根据某个属性进行排序
-      // result.sort((a, b) => {
-      //   // 返回-1, 0, 或1来决定排序
-      //   return a.someAttribute - b.someAttribute;
-      // });
+      if (this.selectedSort === 'atk_90_90_ac')
+      {
+      result.sort((a, b) => {
+      // 返回-1, 0, 或1来决定排序
+              // 如果a的id为空，则将a视为大于b
+        if (!a.id) return 1; // 将a移动到数组末尾
+        // 如果b的id为空，则将b视为大于a
+        if (!b.id) return -1; // 将b移动到数组末尾
+
+         return a.stats.atk_90_90_ac - b.stats.atk_90_90_ac;
+       });
+      }
+      else if (this.selectedSort === 'def_90_90_ac')
+      {
+      result.sort((a, b) => {
+      // 返回-1, 0, 或1来决定排序
+              // 如果a的id为空，则将a视为大于b
+        if (!a.id) return 1; // 将a移动到数组末尾
+        // 如果b的id为空，则将b视为大于a
+        if (!b.id) return -1; // 将b移动到数组末尾
+
+         return a.stats.def_90_90_ac - b.stats.def_90_90_ac;
+       });
+      }
+      else if (this.selectedSort === 'hp_90_90_ac')
+      {
+      result.sort((a, b) => {
+      // 返回-1, 0, 或1来决定排序
+              // 如果a的id为空，则将a视为大于b
+        if (!a.id) return 1; // 将a移动到数组末尾
+        // 如果b的id为空，则将b视为大于a
+        if (!b.id) return -1; // 将b移动到数组末尾
+
+         return a.stats.hp_90_90_ac - b.stats.hp_90_90_ac;
+       });
+      }
 
       this.rendercharacter = result;
       console.log(this.rendercharacter, 'rendercharacter');
@@ -538,18 +585,21 @@ export default {
       this.radarChart = echarts.init(document.getElementById(id));
       console.log(index,"index!!!!!");
       console.log(this.characters,"name!!!!!");
-      console.log(this.characters[index ],"name!!!!!");
+      console.log(this.characters[index],"name!!!!!");
       let radarValues = [
-        this.characters[index].stats.atk_90_90, // 假设这是ATK的值
-        this.characters[index].stats.def_90_90, // 假设这是DEF的值
-        this.characters[index].stats.hp_90_90, // 假设这是HP的值
-        // this.character.stats.elemental_mastery, // 假设这是Elemental Mastery的值
-        // this.character.stats.healing_bonus, // 假设这是Healing Bonus的值
-        // this.character.stats.energy_recharge, // 假设这是Energy Recharge的值
+        this.characters[index].stats.atk_90_90_ac, // 假设这是ATK的值
+        this.characters[index].stats.def_90_90_ac, // 假设这是DEF的值
+        this.characters[index].stats.hp_90_90_ac, // 假设这是HP的值
+        this.characters[index].stats.energy_recharge, // 假设这是Energy Recharge的值
+        this.characters[index].stats.elemental_mastery, // 假设这是Elemental Mastery的值
+        this.characters[index].stats.healing_bonus, // 假设这是Healing Bonus的值
         // this.character.stats.shield_strength, // 假设这是Shield Strength的值
+        0,
         // this.character.stats.ancillary_stats, // 假设这是Ancillary Stats的值
+        0
         // 确保顺序与radar.indicator中定义的指标相匹配
-        35.238, 27.85, 19.25, 30, 20.47
+        // 35.238, 27.85, 19.25, 30, 
+        // 20.47
       ];
       let optionradarnow = {
         color: ['#67F9D8', '#f65353', '#56A3F1', '#FF917C'],
@@ -579,9 +629,9 @@ export default {
               {name: 'ATK', max: 500},
               {name: 'DEF', max: 1000},
               {name: 'HP', max: 20000},
-              {name: 'Elemental Mastery', max: 50},
-              {name: 'Healing Bonus', max: 50},
-              {name: 'Energy Recharge', max: 50},
+              {name: 'Energy Recharge', max: 1.5},
+              {name: 'Elemental Mastery', max: 120},
+              {name: 'Healing Bonus', max: 0.3},
               {name: 'Shield', max: 50},
               {name: 'Ancillary', max: 50},
             ],
@@ -641,7 +691,7 @@ export default {
 
     loadCSVData() {
       return new Promise((resolve, reject) => {
-        fetch('./data/genshin.csv')
+        fetch('./data/genshinv1.csv')
             .then(response => response.text())
             .then(csvData => {
               Papa.parse(csvData, {
@@ -665,6 +715,9 @@ export default {
                         kr: character.voice_kr,
                       },
                       stats: {
+                        hp_90_90_ac: character.hp_90_90_ac,
+                        atk_90_90_ac: character.atk_90_90_ac,
+                        def_90_90_ac: character.def_90_90_ac,
                         hp_90_90: character.hp_90_90,
                         atk_90_90: character.atk_90_90,
                         def_90_90: character.def_90_90,
@@ -707,6 +760,9 @@ export default {
                         hp_1_20:character.hp_1_20,
                         atk_1_20:character.atk_1_20,
                         def_1_20:character.def_1_20,
+                        elemental_mastery:character.elem_mastery_ac,
+                        energy_recharge:character.elem_recharge_ac,
+                        healing_bonus:character.heal_bns_ac
                       },
                       releaseDate: character.release_date,
                       weaponType: character.weapon_type,
@@ -825,7 +881,21 @@ export default {
   computed: {
 
 
+  },
+  
+  watch: {
+  selectedSort(newVal, oldVal) {
+    if (newVal !== oldVal) {
+      console.log(oldVal,"oldVal");
+      console.log(newVal,"newVal");
+
+      localStorage.setItem('selectedSort', newVal);
+      // 当selectedSort变化时，刷新页面
+      window.location.reload();
+    }
   }
+},
+
 }
 </script>
 
