@@ -1,14 +1,5 @@
 <template>
   <el-container>
-   <el-header>
-    <el-select v-model="selectedSort" placeholder="请选择排序方式" @change="sortCharacters">
-      <el-option label="ordered by id" value=""></el-option>
-      <el-option label="ordered by attack" value="atk_90_90_ac"></el-option>
-      <el-option label="ordered by defense" value="def_90_90_ac"></el-option>
-      <el-option label="ordered by hp" value="hp_90_90_ac"></el-option>
-
-    </el-select>
-  </el-header>
     <el-dialog
         title="Character Details"
         v-model:visible="centerDialogVisible"
@@ -41,16 +32,14 @@
       </el-row>
 
       <span slot="footer" class="dialog-footer">
-<!--    <el-button @click="centerDialogVisible = false">取 消</el-button>-->
-<!--    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>-->
-  </span>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+      </span>
     </el-dialog>
     <div class="card-container" ref="scrollContainer">
       <el-row :gutter="40">
         <!-- 循环生成30个卡片 -->
-        <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id">
-          
-          <!-- itemfilter -->
+        <el-col :span="12" v-for="(character, index) in this.rendercharacter" :key="character.id">
           <el-card class="card">
             <el-row :span="20">
               <!-- 头像列 -->
@@ -100,6 +89,8 @@ export default {
     //   }
     //
     // });
+
+
     this.loadCSVData().then(() => {
       // 确保此时数据已加载
       this.sortedAndFilteredCharacters();
@@ -317,11 +308,6 @@ export default {
       detailavatat:'',
 
       characters: [],         // 角色列表
-      //selectedSort: null,     //
-      selectedSort: (() => {
-        const savedSort = localStorage.getItem('selectedSort');
-        return savedSort ? savedSort : ''; // 如果 localStorage 中有值则使用，否则使用默认值
-      })(),
 
       rendercharacter: [],   // 渲染角色列表
 
@@ -351,47 +337,47 @@ export default {
         legend: {
 
         },
-        // radar: [
-        //   {
-        //     // 第一个雷达图的配置
-        //     indicator: [
-        //       {name: 'ATK', max: 500},
-        //       {name: 'DEF', max: 1000},
-        //       {name: 'HP', max: 20000},
-        //       {name: 'Energy Recharge', max: 1.5},
-        //       {name: 'Elemental Mastery', max: 100},
-        //       {name: 'Healing Bonus', max: 0.3},
-        //       {name: 'Shield', max: 50},
-        //       {name: 'Ancillary', max: 50},
-        //     ],
-        //     center: ['50%', '50%'], // 根据需要调整位置
-        //     radius: 120,
-        //     splitNumber: 4,
-        //     shape: 'circle',
-        //     startAngle: 90,
-        //     axisName: {
-        //       formatter: '【{value}】',
-        //       color: '#000000'
-        //     },
-        //     splitArea: {
-        //       areaStyle: {
-        //         color: ['#8ee5db', '#5ddbd8', '#7ab1e7', '#aec7ea'],
-        //         shadowColor: 'rgba(0, 0, 0, 0.2)',
-        //         shadowBlur: 10
-        //       }
-        //     },
-        //     axisLine: {
-        //       lineStyle: {
-        //         color: 'rgba(211, 253, 250, 0.8)'
-        //       }
-        //     },
-        //     splitLine: {
-        //       lineStyle: {
-        //         color: 'rgba(211, 253, 250, 0.8)'
-        //       }
-        //     }
-        //   }
-        // ],
+        radar: [
+          {
+            // 第一个雷达图的配置
+            indicator: [
+              {name: 'ATK', max: 500},
+              {name: 'DEF', max: 1000},
+              {name: 'HP', max: 20000},
+              {name: 'Energy Recharge', max: 1.5},
+              {name: 'Elemental Mastery', max: 100},
+              {name: 'Healing Bonus', max: 0.3},
+              {name: 'Shield', max: 50},
+              {name: 'Ancillary', max: 50},
+            ],
+            center: ['50%', '50%'], // 根据需要调整位置
+            radius: 120,
+            splitNumber: 4,
+            shape: 'circle',
+            startAngle: 90,
+            axisName: {
+              formatter: '【{value}】',
+              color: '#000000'
+            },
+            splitArea: {
+              areaStyle: {
+                color: ['#8ee5db', '#5ddbd8', '#7ab1e7', '#aec7ea'],
+                shadowColor: 'rgba(0, 0, 0, 0.2)',
+                shadowBlur: 10
+              }
+            },
+            axisLine: {
+              lineStyle: {
+                color: 'rgba(211, 253, 250, 0.8)'
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: 'rgba(211, 253, 250, 0.8)'
+              }
+            }
+          }
+        ],
         series: [
           {
             name: 'rate',
@@ -414,25 +400,12 @@ export default {
           }
         ]
       }
-    
-    
-
     };
-  },
-  computed: {
-    itemfilter(){
-      // <el-col :span="12" v-for="(character, index) in this.rendercharacter" :key="character.id">
-      return this.rendercharacter.filter((character, index) => index < this.rendercharacter.length - 1);
-    }
   },
   methods: {
     getAvatarSrc(id) {
-
-    if (id && !isNaN(id)) {
-  // 在这里调用 getAvatarSrc
-
+      console.log(id,"现在是啥id");
       try {
-        console.log(id,"现在是啥id");
         // 动态导入图片，注意路径要正确匹配你的文件结构
         const numericId = Number(id)+1;
 
@@ -443,10 +416,6 @@ export default {
         // 可以返回一个默认图片路径
         return require('@/assets/avatar/albedo.png');
       }
-
-    } else {
-    }
-
     },
 
     sortedAndFilteredCharacters() {
@@ -461,42 +430,10 @@ export default {
       //
       // // 应用排序逻辑
       // // 例如，根据某个属性进行排序
-      if (this.selectedSort === 'atk_90_90_ac')
-      {
-      result.sort((a, b) => {
-      // 返回-1, 0, 或1来决定排序
-              // 如果a的id为空，则将a视为大于b
-        if (!a.id) return 1; // 将a移动到数组末尾
-        // 如果b的id为空，则将b视为大于a
-        if (!b.id) return -1; // 将b移动到数组末尾
-
-         return a.stats.atk_90_90_ac - b.stats.atk_90_90_ac;
-       });
-      }
-      else if (this.selectedSort === 'def_90_90_ac')
-      {
-      result.sort((a, b) => {
-      // 返回-1, 0, 或1来决定排序
-              // 如果a的id为空，则将a视为大于b
-        if (!a.id) return 1; // 将a移动到数组末尾
-        // 如果b的id为空，则将b视为大于a
-        if (!b.id) return -1; // 将b移动到数组末尾
-
-         return a.stats.def_90_90_ac - b.stats.def_90_90_ac;
-       });
-      }
-      else if (this.selectedSort === 'hp_90_90_ac')
-      {
-      result.sort((a, b) => {
-      // 返回-1, 0, 或1来决定排序
-              // 如果a的id为空，则将a视为大于b
-        if (!a.id) return 1; // 将a移动到数组末尾
-        // 如果b的id为空，则将b视为大于a
-        if (!b.id) return -1; // 将b移动到数组末尾
-
-         return a.stats.hp_90_90_ac - b.stats.hp_90_90_ac;
-       });
-      }
+      // result.sort((a, b) => {
+      //   // 返回-1, 0, 或1来决定排序
+      //   return a.someAttribute - b.someAttribute;
+      // });
 
       this.rendercharacter = result;
       console.log(this.rendercharacter, 'rendercharacter');
@@ -600,15 +537,15 @@ export default {
       console.log(id,"id!!!!!");
       this.radarChart = echarts.init(document.getElementById(id));
       console.log(index,"index!!!!!");
-      console.log(this.rendercharacter,"name!!!!!");
-      console.log(this.rendercharacter[index],"name!!!!!");
+      console.log(this.characters,"name!!!!!");
+      console.log(this.characters[index],"name!!!!!");
       let radarValues = [
-        this.rendercharacter[index].stats.atk_90_90_ac, // 假设这是ATK的值
-        this.rendercharacter[index].stats.def_90_90_ac, // 假设这是DEF的值
-        this.rendercharacter[index].stats.hp_90_90_ac, // 假设这是HP的值
-        this.rendercharacter[index].stats.energy_recharge, // 假设这是Energy Recharge的值
-        this.rendercharacter[index].stats.elemental_mastery, // 假设这是Elemental Mastery的值
-        this.rendercharacter[index].stats.healing_bonus, // 假设这是Healing Bonus的值
+        this.characters[index].stats.atk_90_90_ac, // 假设这是ATK的值
+        this.characters[index].stats.def_90_90_ac, // 假设这是DEF的值
+        this.characters[index].stats.hp_90_90_ac, // 假设这是HP的值
+        this.characters[index].stats.energy_recharge, // 假设这是Energy Recharge的值
+        this.characters[index].stats.elemental_mastery, // 假设这是Elemental Mastery的值
+        this.characters[index].stats.healing_bonus, // 假设这是Healing Bonus的值
         // this.character.stats.shield_strength, // 假设这是Shield Strength的值
         0,
         // this.character.stats.ancillary_stats, // 假设这是Ancillary Stats的值
@@ -897,21 +834,7 @@ export default {
   computed: {
 
 
-  },
-  
-  watch: {
-  selectedSort(newVal, oldVal) {
-    if (newVal !== oldVal) {
-      console.log(oldVal,"oldVal");
-      console.log(newVal,"newVal");
-
-      localStorage.setItem('selectedSort', newVal);
-      // 当selectedSort变化时，刷新页面
-      window.location.reload();
-    }
   }
-},
-
 }
 </script>
 
