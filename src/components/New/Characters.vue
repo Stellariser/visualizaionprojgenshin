@@ -469,8 +469,10 @@ export default {
         if (!a.id) return 1; // 将a移动到数组末尾
         // 如果b的id为空，则将b视为大于a
         if (!b.id) return -1; // 将b移动到数组末尾
+        if (!a.stats.atk_90_90_ac) return 1;
+        if (!b.stats.atk_90_90_ac) return -1;
 
-         return a.stats.atk_90_90_ac - b.stats.atk_90_90_ac;
+         return (a.stats.atk_90_90_ac - b.stats.atk_90_90_ac);
        });
       }
       else if (this.selectedSort === 'def_90_90_ac')
@@ -481,6 +483,8 @@ export default {
         if (!a.id) return 1; // 将a移动到数组末尾
         // 如果b的id为空，则将b视为大于a
         if (!b.id) return -1; // 将b移动到数组末尾
+        if (!a.stats.def_90_90_ac) return 1;
+        if (!b.stats.def_90_90_ac) return -1;
 
          return a.stats.def_90_90_ac - b.stats.def_90_90_ac;
        });
@@ -493,6 +497,8 @@ export default {
         if (!a.id) return 1; // 将a移动到数组末尾
         // 如果b的id为空，则将b视为大于a
         if (!b.id) return -1; // 将b移动到数组末尾
+        if (!a.stats.hp_90_90_ac) return 1;
+        if (!b.stats.hp_90_90_ac) return -1;
 
          return a.stats.hp_90_90_ac - b.stats.hp_90_90_ac;
        });
@@ -715,75 +721,75 @@ export default {
                 complete: (results) => {
                   this.characters = results.data.map(character => {
                     return {
-                      name: character.character_name,
-                      playable: character.playable,
-                      rarity: character.rarity,
-                      vision: character.vision,
-                      region: character.region,
-                      model: character.model,
-                      constellation: character.constellation,
-                      birthday: character.birthday,
-                      specialDish: character.special_dish,
+                        name: character.character_name !== 'NA' ? character.character_name : null,
+                        playable: character.playable !== 'NA' ? character.playable : null,
+                        rarity: character.rarity !== 'NA' ? character.rarity : null,
+                        vision: character.vision !== 'NA' ? character.vision : null,
+                        region: character.region !== 'NA' ? character.region : null,
+                        model: character.model !== 'NA' ? character.model : null,
+                        constellation: character.constellation !== 'NA' ? character.constellation : null,
+                        birthday: character.birthday !== 'NA' ? character.birthday : null,
+                        specialDish: character.special_dish !== 'NA' ? character.special_dish : null,
                       voice: {
-                        eng: character.voice_eng,
-                        cn: character.voice_cn,
-                        jp: character.voice_jp,
-                        kr: character.voice_kr,
+                        eng: character.voice_eng !== 'NA' ? character.voice_eng : null,
+                        cn: character.voice_cn !== 'NA' ? character.voice_cn : null,
+                        jp: character.voice_jp !== 'NA' ? character.voice_jp : null,
+                        kr: character.voice_kr !== 'NA' ? character.voice_kr : null,
                       },
                       stats: {
-                        hp_90_90_ac: character.hp_90_90_ac,
-                        atk_90_90_ac: character.atk_90_90_ac,
-                        def_90_90_ac: character.def_90_90_ac,
-                        hp_90_90: character.hp_90_90,
-                        atk_90_90: character.atk_90_90,
-                        def_90_90: character.def_90_90,
-                        hp_80_90: character.hp_80_90,
-                        atk_80_90:character.atk_80_90,
-                        def_80_90:character.def_80_90,
-                        hp_80_80:character.hp_80_80,
-                        atk_80_80:character.atk_80_80,
-                        def_80_80:character.def_80_80,
-                        hp_70_80:character.hp_70_80,
-                        atk_70_80:character.atk_70_80,
-                        def_70_80:character.def_70_80,
-                        hp_70_70:character.hp_70_70,
-                        atk_70_70:character.atk_70_70,
-                        def_70_70:character.def_70_70,
-                        hp_60_70:character.hp_60_70,
-                        atk_60_70:character.atk_60_70,
-                        def_60_70:character.def_60_70,
-                        hp_60_60:character.hp_60_60,
-                        atk_60_60:character.atk_60_60,
-                        def_60_60:character.def_60_60,
-                        hp_50_60:character.hp_50_60,
-                        atk_50_60:character.atk_50_60,
-                        def_50_60:character.def_50_60,
-                        hp_50_50:character.hp_50_50,
-                        atk_50_50:character.atk_50_50,
-                        def_50_50:character.def_50_50,
-                        hp_40_50:character.hp_40_50,
-                        atk_40_50:character.atk_40_50,
-                        def_40_50:character.def_40_50,
-                        hp_40_40:character.hp_40_40,
-                        atk_40_40:character.atk_40_40,
-                        def_40_40:character.def_40_40,
-                        hp_20_40:character.hp_20_40,
-                        atk_20_40:character.atk_20_40,
-                        def_20_40:character.def_20_40,
-                        hp_20_20:character.hp_20_20,
-                        atk_20_20:character.atk_20_20,
-                        def_20_20:character.def_20_20,
-                        hp_1_20:character.hp_1_20,
-                        atk_1_20:character.atk_1_20,
-                        def_1_20:character.def_1_20,
-                        elemental_mastery:character.elem_mastery_ac,
-                        energy_recharge:character.elem_recharge_ac,
-                        healing_bonus:character.heal_bns_ac
+                  hp_90_90_ac: character.hp_90_90_ac !== 'NA' ? character.hp_90_90_ac : null,
+                  atk_90_90_ac: character.atk_90_90_ac !== 'NA' ? character.atk_90_90_ac : null,
+                  def_90_90_ac: character.def_90_90_ac !== 'NA' ? character.def_90_90_ac : null,
+                  hp_90_90: character.hp_90_90 !== 'NA' ? character.hp_90_90 : null,
+                  atk_90_90: character.atk_90_90 !== 'NA' ? character.atk_90_90 : null,
+                  def_90_90: character.def_90_90 !== 'NA' ? character.def_90_90 : null,
+                  hp_80_90: character.hp_80_90 !== 'NA' ? character.hp_80_90 : null,
+                  atk_80_90: character.atk_80_90 !== 'NA' ? character.atk_80_90 : null,
+                  def_80_90: character.def_80_90 !== 'NA' ? character.def_80_90 : null,
+                  hp_80_80: character.hp_80_80 !== 'NA' ? character.hp_80_80 : null,
+                  atk_80_80: character.atk_80_80 !== 'NA' ? character.atk_80_80 : null,
+                  def_80_80: character.def_80_80 !== 'NA' ? character.def_80_80 : null,
+                  hp_70_80: character.hp_70_80 !== 'NA' ? character.hp_70_80 : null,
+                  atk_70_80: character.atk_70_80 !== 'NA' ? character.atk_70_80 : null,
+                  def_70_80: character.def_70_80 !== 'NA' ? character.def_70_80 : null,
+                  hp_70_70: character.hp_70_70 !== 'NA' ? character.hp_70_70 : null,
+                  atk_70_70: character.atk_70_70 !== 'NA' ? character.atk_70_70 : null,
+                  def_70_70: character.def_70_70 !== 'NA' ? character.def_70_70 : null,
+                  hp_60_70: character.hp_60_70 !== 'NA' ? character.hp_60_70 : null,
+                  atk_60_70: character.atk_60_70 !== 'NA' ? character.atk_60_70 : null,
+                  def_60_70: character.def_60_70 !== 'NA' ? character.def_60_70 : null,
+                  hp_60_60: character.hp_60_60 !== 'NA' ? character.hp_60_60 : null,
+                  atk_60_60: character.atk_60_60 !== 'NA' ? character.atk_60_60 : null,
+                  def_60_60: character.def_60_60 !== 'NA' ? character.def_60_60 : null,
+                  hp_50_60: character.hp_50_60 !== 'NA' ? character.hp_50_60 : null,
+                  atk_50_60: character.atk_50_60 !== 'NA' ? character.atk_50_60 : null,
+                  def_50_60: character.def_50_60 !== 'NA' ? character.def_50_60 : null,
+                  hp_50_50: character.hp_50_50 !== 'NA' ? character.hp_50_50 : null,
+                  atk_50_50: character.atk_50_50 !== 'NA' ? character.atk_50_50 : null,
+                  def_50_50: character.def_50_50 !== 'NA' ? character.def_50_50 : null,
+                  hp_40_50: character.hp_40_50 !== 'NA' ? character.hp_40_50 : null,
+                  atk_40_50: character.atk_40_50 !== 'NA' ? character.atk_40_50 : null,
+                  def_40_50: character.def_40_50 !== 'NA' ? character.def_40_50 : null,
+                  hp_40_40: character.hp_40_40 !== 'NA' ? character.hp_40_40 : null,
+                  atk_40_40: character.atk_40_40 !== 'NA' ? character.atk_40_40 : null,
+                  def_40_40: character.def_40_40 !== 'NA' ? character.def_40_40 : null,
+                  hp_20_40: character.hp_20_40 !== 'NA' ? character.hp_20_40 : null,
+                  atk_20_40: character.atk_20_40 !== 'NA' ? character.atk_20_40 : null,
+                  def_20_40: character.def_20_40 !== 'NA' ? character.def_20_40 : null,
+                  hp_20_20: character.hp_20_20 !== 'NA' ? character.hp_20_20 : null,
+                  atk_20_20: character.atk_20_20 !== 'NA' ? character.atk_20_20 : null,
+                  def_20_20: character.def_20_20 !== 'NA' ? character.def_20_20 : null,
+                  hp_1_20: character.hp_1_20 !== 'NA' ? character.hp_1_20 : null,
+                  atk_1_20: character.atk_1_20 !== 'NA' ? character.atk_1_20 : null,
+                  def_1_20: character.def_1_20 !== 'NA' ? character.def_1_20 : null,
+                  elemental_mastery: character.elem_mastery_ac !== 'NA' ? character.elem_mastery_ac : null,
+                  energy_recharge: character.elem_recharge_ac !== 'NA' ? character.elem_recharge_ac : null,
+                  healing_bonus: character.heal_bns_ac !== 'NA' ? character.heal_bns_ac : null,
                       },
-                      releaseDate: character.release_date,
-                      weaponType: character.weapon_type,
-                      ascension: character.ascension,
-                      id: character.id,
+                  releaseDate: character.release_date !== 'NA' ? character.release_date : null,
+                  weaponType: character.weapon_type !== 'NA' ? character.weapon_type : null,
+                  ascension: character.ascension !== 'NA' ? character.ascension : null,
+                  id: character.id !== 'NA' ? character.id : null,
                       // Add other properties as needed
                     };
                   });
