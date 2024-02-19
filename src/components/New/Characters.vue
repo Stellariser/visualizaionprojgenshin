@@ -48,7 +48,9 @@
     <div class="card-container" ref="scrollContainer">
       <el-row :gutter="40">
         <!-- 循环生成30个卡片 -->
-        <el-col :span="12" v-for="(character, index) in this.rendercharacter" :key="character.id">
+        <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id">
+          
+          <!-- itemfilter -->
           <el-card class="card">
             <el-row :span="20">
               <!-- 头像列 -->
@@ -349,47 +351,47 @@ export default {
         legend: {
 
         },
-        radar: [
-          {
-            // 第一个雷达图的配置
-            indicator: [
-              {name: 'ATK', max: 500},
-              {name: 'DEF', max: 1000},
-              {name: 'HP', max: 20000},
-              {name: 'Energy Recharge', max: 1.5},
-              {name: 'Elemental Mastery', max: 100},
-              {name: 'Healing Bonus', max: 0.3},
-              {name: 'Shield', max: 50},
-              {name: 'Ancillary', max: 50},
-            ],
-            center: ['50%', '50%'], // 根据需要调整位置
-            radius: 120,
-            splitNumber: 4,
-            shape: 'circle',
-            startAngle: 90,
-            axisName: {
-              formatter: '【{value}】',
-              color: '#000000'
-            },
-            splitArea: {
-              areaStyle: {
-                color: ['#8ee5db', '#5ddbd8', '#7ab1e7', '#aec7ea'],
-                shadowColor: 'rgba(0, 0, 0, 0.2)',
-                shadowBlur: 10
-              }
-            },
-            axisLine: {
-              lineStyle: {
-                color: 'rgba(211, 253, 250, 0.8)'
-              }
-            },
-            splitLine: {
-              lineStyle: {
-                color: 'rgba(211, 253, 250, 0.8)'
-              }
-            }
-          }
-        ],
+        // radar: [
+        //   {
+        //     // 第一个雷达图的配置
+        //     indicator: [
+        //       {name: 'ATK', max: 500},
+        //       {name: 'DEF', max: 1000},
+        //       {name: 'HP', max: 20000},
+        //       {name: 'Energy Recharge', max: 1.5},
+        //       {name: 'Elemental Mastery', max: 100},
+        //       {name: 'Healing Bonus', max: 0.3},
+        //       {name: 'Shield', max: 50},
+        //       {name: 'Ancillary', max: 50},
+        //     ],
+        //     center: ['50%', '50%'], // 根据需要调整位置
+        //     radius: 120,
+        //     splitNumber: 4,
+        //     shape: 'circle',
+        //     startAngle: 90,
+        //     axisName: {
+        //       formatter: '【{value}】',
+        //       color: '#000000'
+        //     },
+        //     splitArea: {
+        //       areaStyle: {
+        //         color: ['#8ee5db', '#5ddbd8', '#7ab1e7', '#aec7ea'],
+        //         shadowColor: 'rgba(0, 0, 0, 0.2)',
+        //         shadowBlur: 10
+        //       }
+        //     },
+        //     axisLine: {
+        //       lineStyle: {
+        //         color: 'rgba(211, 253, 250, 0.8)'
+        //       }
+        //     },
+        //     splitLine: {
+        //       lineStyle: {
+        //         color: 'rgba(211, 253, 250, 0.8)'
+        //       }
+        //     }
+        //   }
+        // ],
         series: [
           {
             name: 'rate',
@@ -417,10 +419,20 @@ export default {
 
     };
   },
+  computed: {
+    itemfilter(){
+      // <el-col :span="12" v-for="(character, index) in this.rendercharacter" :key="character.id">
+      return this.rendercharacter.filter((character, index) => index < this.rendercharacter.length - 1);
+    }
+  },
   methods: {
     getAvatarSrc(id) {
-      console.log(id,"现在是啥id");
+
+    if (id && !isNaN(id)) {
+  // 在这里调用 getAvatarSrc
+
       try {
+        console.log(id,"现在是啥id");
         // 动态导入图片，注意路径要正确匹配你的文件结构
         const numericId = Number(id)+1;
 
@@ -431,6 +443,10 @@ export default {
         // 可以返回一个默认图片路径
         return require('@/assets/avatar/albedo.png');
       }
+
+    } else {
+    }
+
     },
 
     sortedAndFilteredCharacters() {
@@ -584,15 +600,15 @@ export default {
       console.log(id,"id!!!!!");
       this.radarChart = echarts.init(document.getElementById(id));
       console.log(index,"index!!!!!");
-      console.log(this.characters,"name!!!!!");
-      console.log(this.characters[index],"name!!!!!");
+      console.log(this.rendercharacter,"name!!!!!");
+      console.log(this.rendercharacter[index],"name!!!!!");
       let radarValues = [
-        this.characters[index].stats.atk_90_90_ac, // 假设这是ATK的值
-        this.characters[index].stats.def_90_90_ac, // 假设这是DEF的值
-        this.characters[index].stats.hp_90_90_ac, // 假设这是HP的值
-        this.characters[index].stats.energy_recharge, // 假设这是Energy Recharge的值
-        this.characters[index].stats.elemental_mastery, // 假设这是Elemental Mastery的值
-        this.characters[index].stats.healing_bonus, // 假设这是Healing Bonus的值
+        this.rendercharacter[index].stats.atk_90_90_ac, // 假设这是ATK的值
+        this.rendercharacter[index].stats.def_90_90_ac, // 假设这是DEF的值
+        this.rendercharacter[index].stats.hp_90_90_ac, // 假设这是HP的值
+        this.rendercharacter[index].stats.energy_recharge, // 假设这是Energy Recharge的值
+        this.rendercharacter[index].stats.elemental_mastery, // 假设这是Elemental Mastery的值
+        this.rendercharacter[index].stats.healing_bonus, // 假设这是Healing Bonus的值
         // this.character.stats.shield_strength, // 假设这是Shield Strength的值
         0,
         // this.character.stats.ancillary_stats, // 假设这是Ancillary Stats的值
