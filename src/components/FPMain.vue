@@ -26,6 +26,10 @@
             <i class="el-icon-s-data"></i>
             <span slot="title">Characters</span>
           </el-menu-item>
+          <el-menu-item index="/recommend-teams">
+            <i class="el-icon-s-data"></i>
+            <span slot="title">Recommend Teams</span>
+          </el-menu-item>
           <el-menu-item index="/homework">
             <i class="el-icon-s-data"></i>
             <span slot="title">Test</span>
