@@ -25,19 +25,46 @@
               <img :src="avatarSrc" class="avatar" alt="avatar">
             </vs-avatar>
           </div>
+          <div style="text-align:center;">
+            <vs-avatar square class="vsavatar2" badge writing badge-color="success">
+              <img :src="armSrc" class="avatar" alt="avatar">
+            </vs-avatar>
+          </div>
         </el-col>
         <el-col :span="6"><div class="grid-content bg-purple-dark">
           <div ref="myChart2" style="height:200px;width:100%;"></div>
         </div>
+          <el-col :span="12"><div class="grid-content bg-purple-dark">
+            <div ref="myChart5" style="height:300px;width:240%;"></div>
+          </div>
+          </el-col>
           </el-col>
         <el-col :span="6"><div class="grid-content bg-purple-dark">
           <div ref="myChart3" style="height:200px;width:100%;"></div>
         </div>
+<!--          <div style="text-align:center;">-->
+<!--            <vs-avatar square class="vsavatar2" badge writing badge-color="success">-->
+<!--              <img :src="armSrc" class="avatar" alt="avatar">-->
+<!--            </vs-avatar>-->
+<!--          </div>-->
         </el-col>
         <el-col :span="6"><div class="grid-content bg-purple-dark">
           <div ref="myChart4" style="height:200px;width:100%;"></div>
         </div>
         </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+        </el-col>
+
+<!--        <el-col :span="6"><div class="grid-content bg-purple-dark">-->
+<!--          <div ref="myChart3" style="height:200px;width:100%;"></div>-->
+<!--        </div>-->
+<!--        </el-col>-->
+<!--        <el-col :span="6"><div class="grid-content bg-purple-dark">-->
+<!--          <div ref="myChart4" style="height:200px;width:100%;"></div>-->
+<!--        </div>-->
+<!--        </el-col>-->
       </el-row>
 
       <span slot="footer" class="dialog-footer">
@@ -307,11 +334,57 @@ export default {
         ]
       },
 
+      optionpieper : {
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          top: '5%',
+          left: 'center'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            padAngle: 5,
+            itemStyle: {
+              borderRadius: 10
+            },
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 40,
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: [
+              { value: 1048, name: 'Special0' },
+              { value: 735, name: 'Special1' },
+              { value: 580, name: 'Special2' },
+              { value: 484, name: 'Special3' },
+              { value: 300, name: 'Special4' },
+              { value: 484, name: 'Special5' },
+              { value: 300, name: 'Special6' }
+            ]
+          }
+        ]
+      },
+
       chartInstance: null,
       chartData: [],
       radarCharttest: null,
 
       avatarSrc : require('@/assets/avatar/albedo.png') ,
+      armSrc : require('@/assets/arm/1.png') ,
       centerDialogVisible: false,
       radarChart: null,
       detailavatat:'',
@@ -513,10 +586,12 @@ export default {
           let mychart2 = echarts.init(this.$refs.myChart2)
           let mychart3 = echarts.init(this.$refs.myChart3)
           let mychart4 = echarts.init(this.$refs.myChart4)
+          let mychart5 = echarts.init(this.$refs.myChart5)
 
           let statsListatk = [];
           let statsListdef = [];
           let statsListhp = [];
+          let statsListsp = [];
           const properties = ['atk_1_20',
             'atk_20_20',
             'atk_20_40',
@@ -546,15 +621,26 @@ export default {
             if (prop.startsWith('hp_')) {
               statsListhp.push(characterStats[prop]);
             }
+            if (prop.startsWith('sp')) {
+              statsListsp.push({value: characterStats[prop], name: prop});
+            }
+            if (prop.startsWith('arm')) {
+              this.armSrc = require(`@/assets/arm/${Number(characterStats[prop])}.png`);
+
+            }
           }
-          console.log(statsListdef,"statsListdef");
+          console.log(statsListsp,"statsListsp");
 
           this.optionlineatk.series[0].data = statsListatk.reverse()
           this.optionlinedef.series[0].data = statsListdef.reverse()
           this.optionlinehp.series[0].data = statsListhp.reverse()
+          this.optionpieper.series[0].data = statsListsp
+          // this.armSrc = require(`@/assets/arm/${Number(characterStats[prop])}.png`);
+
           mychart2.setOption(this.optionlineatk)
           mychart3.setOption(this.optionlinedef)
           mychart4.setOption(this.optionlinehp)
+          mychart5.setOption(this.optionpieper)
         }
       });
     },
@@ -571,6 +657,10 @@ export default {
       const numericId = Number(index)+1;
       console.log(`@/assets/genshinava/${numericId}.png`, "zenmegeshi");
       this.avatarSrc = require(`@/assets/genshinava/${numericId}.png`);
+
+
+
+
       console.log(this.centerDialogVisible,"this.centerDialogVisible");
       this.centerDialogVisible = !this.centerDialogVisible;
       console.log(this.centerDialogVisible,"this.centerDialogVisible");
@@ -710,6 +800,18 @@ export default {
       this.radarChart.setOption(optionradarnow);
     },
 
+    parsePercentage(percentageString) {
+      console.log(percentageString,"percentageString!!!!!");
+      // 如果值是 undefined 或 'NA'，则直接返回 null
+      if (percentageString === undefined || percentageString === 'NA') {
+        return null;
+      }
+      // 只有值既不是 undefined 也不是 'NA' 时，才继续尝试转换
+      if (percentageString.endsWith('%')) {
+        return parseFloat(percentageString.slice(0, -1)) / 100;
+      }
+      return null;
+    },
 
     loadCSVData() {
       return new Promise((resolve, reject) => {
@@ -737,6 +839,14 @@ export default {
                         kr: character.voice_kr !== 'NA' ? character.voice_kr : null,
                       },
                       stats: {
+                        spsecial_0: character.spsecial_0 !== 'NA' ? this.parsePercentage(character.spsecial_0) : null,
+                        special_1: character.special_1 !== 'NA' ? this.parsePercentage(character.special_1) : null,
+                        special_2: character.special_2 !== 'NA' ? this.parsePercentage(character.special_2) : null,
+                        special_3: character.special_3 !== 'NA' ? this.parsePercentage(character.special_3) : null,
+                        special_4: character.special_4 !== 'NA' ? this.parsePercentage(character.special_4) : null,
+                        special_5: character.special_5 !== 'NA' ? this.parsePercentage(character.special_5) : null,
+                        special_6: character.special_6 !== 'NA' ? this.parsePercentage(character.special_6) : null,
+                        arm: character.arm !== 'NA' ? character.arm : null,
                   hp_90_90_ac: character.hp_90_90_ac !== 'NA' ? character.hp_90_90_ac : null,
                   atk_90_90_ac: character.atk_90_90_ac !== 'NA' ? character.atk_90_90_ac : null,
                   def_90_90_ac: character.def_90_90_ac !== 'NA' ? character.def_90_90_ac : null,
@@ -900,10 +1010,10 @@ export default {
 
 
 },
-  computed: {
-
-
-  },
+  // computed: {
+  //
+  //
+  // },
   
   watch: {
   selectedSort(newVal, oldVal) {
@@ -917,6 +1027,8 @@ export default {
     }
   }
 },
+
+
 
 }
 </script>
@@ -959,9 +1071,19 @@ export default {
   transition: transform 0.3s ease;
 }
 
+.vsavatar2{
+  width: 30%;
+  height: 30%;
+  margin-left: 140px;
+  margin-top: 20px;
+  transition: transform 0.3s ease;
+}
+
 .vsavatar:hover {
   transform: scale(1.04);
 }
+
+
 
 .radar {
   z-index: 1000;
