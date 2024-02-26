@@ -104,6 +104,11 @@
                   Detail
                 </vs-button>
               </el-col>
+              <el-col :span="4" class="bot">
+                <vs-button gradient :active="active == 1" @click="handleButtonClick2(character.id)">
+                  Add to Team
+                </vs-button>
+              </el-col>
 
             </el-row>
           </el-card>
@@ -499,6 +504,26 @@ export default {
     }
   },
   methods: {
+    handleButtonClick2(roleId) {
+      // 检查角色是否已经在队伍中
+      if (this.$store.state.selectedRoles.includes(roleId)) {
+        this.$notify.error({
+          title: 'Ouch...',
+          message: 'Characters are already in the queue'
+        });
+      } else if (!this.$store.state.selectedRoles.includes(0)) {
+        // 检查队伍是否已满（没有空位）
+        this.$notify.error({
+          title: 'Ouch...',
+          message: 'The queue is full.'
+        });
+      } else {
+        // 调用 Vuex 的 mutation 来更新角色 ID
+        this.$store.commit('ADD_ROLE', roleId);
+      }
+    },
+
+
     getAvatarSrc(id) {
 
     if (id && !isNaN(id)) {
@@ -917,96 +942,6 @@ export default {
             });
       });
     },
-
-  //   loadCSVData() {
-  //     return new Promise((resolve, reject) => {
-  //     fetch('./data/genshin.csv')
-  //         .then(response => response.text())
-  //         .then(csvData => {
-  //           Papa.parse(csvData, {
-  //             header: true,
-  //             complete: (results) => {
-  //               this.characters = results.data.map(character => {
-  //                 return {
-  //                   name: character.character_name,
-  //                   playable: character.playable,
-  //                   rarity: character.rarity,
-  //                   vision: character.vision,
-  //                   region: character.region,
-  //                   model: character.model,
-  //                   constellation: character.constellation,
-  //                   birthday: character.birthday,
-  //                   specialDish: character.special_dish,
-  //                   voice: {
-  //                     eng: character.voice_eng,
-  //                     cn: character.voice_cn,
-  //                     jp: character.voice_jp,
-  //                     kr: character.voice_kr,
-  //                   },
-  //                   stats: {
-  //                     hp_90_90: character.hp_90_90,
-  //                     atk_90_90: character.atk_90_90,
-  //                     def_90_90: character.def_90_90,
-  //                     hp_80_90: character.hp_80_90,
-  //                     atk_80_90:character.atk_80_90,
-  //                     def_80_90:character.def_80_90,
-  //                     hp_80_80:character.hp_80_80,
-  //                     atk_80_80:character.atk_80_80,
-  //                     def_80_80:character.def_80_80,
-  //                     hp_70_80:character.hp_70_80,
-  //                     atk_70_80:character.atk_70_80,
-  //                     def_70_80:character.def_70_80,
-  //                     hp_70_70:character.hp_70_70,
-  //                     atk_70_70:character.atk_70_70,
-  //                     def_70_70:character.def_70_70,
-  //                     hp_60_70:character.hp_60_70,
-  //                     atk_60_70:character.atk_60_70,
-  //                     def_60_70:character.def_60_70,
-  //                     hp_60_60:character.hp_60_60,
-  //                     atk_60_60:character.atk_60_60,
-  //                     def_60_60:character.def_60_60,
-  //                     hp_50_60:character.hp_50_60,
-  //                     atk_50_60:character.atk_50_60,
-  //                     def_50_60:character.def_50_60,
-  //                     hp_50_50:character.hp_50_50,
-  //                     atk_50_50:character.atk_50_50,
-  //                     def_50_50:character.def_50_50,
-  //                     hp_40_50:character.hp_40_50,
-  //                     atk_40_50:character.atk_40_50,
-  //                     def_40_50:character.def_40_50,
-  //                     hp_40_40:character.hp_40_40,
-  //                     atk_40_40:character.atk_40_40,
-  //                     def_40_40:character.def_40_40,
-  //                     hp_20_40:character.hp_20_40,
-  //                     atk_20_40:character.atk_20_40,
-  //                     def_20_40:character.def_20_40,
-  //                     hp_20_20:character.hp_20_20,
-  //                     atk_20_20:character.atk_20_20,
-  //                     def_20_20:character.def_20_20,
-  //                     hp_1_20:character.hp_1_20,
-  //                     atk_1_20:character.atk_1_20,
-  //                     def_1_20:character.def_1_20,
-  //                   },
-  //                   releaseDate: character.release_date,
-  //                   weaponType: character.weapon_type,
-  //                   ascension: character.ascension,
-  //                   // Add other properties as needed
-  //                 };
-  //               });
-  //               console.log(this.characters, 'Characters');
-  //             }
-  //           });
-  //         })
-  //         .catch(error => console.error('Error loading the CSV file:', error)
-  //
-  //         );
-  //     });
-  // },
-
-
-
-
-
 
 
 },

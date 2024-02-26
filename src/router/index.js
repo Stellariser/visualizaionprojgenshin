@@ -21,6 +21,7 @@ import FPMain from "@/components/FPMain";
 import Characters from "@/components/New/Characters";
 import test from "@/components/New/test";
 import RecommendTeams from '@/components/New/RecommendTeams'
+import team from '@/components/New/team'
 Vue.use(VueRouter)
 
 const routes = [
@@ -47,6 +48,7 @@ const routes = [
                 component: RecommendTeams
             },
             { path: '/Characters', component: Characters },
+            { path: '/team', component: team },
             { path: '/welcome', component: FPMain },
             { path: '/home/', component: Characters},
             { path: '/test/', component: test},
