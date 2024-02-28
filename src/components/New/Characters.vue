@@ -79,7 +79,7 @@
           
           <!-- itemfilter -->
           <el-card class="card">
-            <el-row :span="20">
+            <el-row :span="16">
               <!-- 头像列 -->
               <el-col :span="8">
 <!--                <img :src="require('@/assets/avatar/ganyu.jpg')" class="avatar" alt="avatar">-->
@@ -109,6 +109,14 @@
                   Add to Team
                 </vs-button>
               </el-col>
+              <el-col :span="4">
+                <el-tag type="success">{{ character.tag1 }}</el-tag>
+              </el-col>
+              <p v-if="character.tag2.length > 0">
+                <el-col :span="4">
+                  <el-tag type="info">{{ character.tag2 }}</el-tag>
+                </el-col>
+              </p>
 
             </el-row>
           </el-card>
@@ -924,6 +932,10 @@ export default {
                   releaseDate: character.release_date !== 'NA' ? character.release_date : null,
                   weaponType: character.weapon_type !== 'NA' ? character.weapon_type : null,
                   ascension: character.ascension !== 'NA' ? character.ascension : null,
+                  // chara recommendation & team evaluation
+                  tag1: character.tag1 !== 'NA' ? character.tag1 : null,
+                  tag2: character.tag2 !== 'NA' ? character.tag2 : null,
+
                   id: character.id !== 'NA' ? character.id : null,
                       // Add other properties as needed
                     };
