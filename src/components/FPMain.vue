@@ -142,7 +142,8 @@ export default {
         try {
           const numericId = Number(id);
           // 当 id 为 0 时，直接使用 0.png，否则使用 id+1 的图片
-          const imageName = numericId === 0 ? 0 : numericId + 1;
+          const imageName = numericId;
+          // const imageName = numericId === 0 ? 0 : numericId + 1;
           console.log(`Rendering image for ID: ${id}, using image: ${imageName}.png`);
           return require(`@/assets/genshinava/${imageName}.png`);
         } catch (e) {

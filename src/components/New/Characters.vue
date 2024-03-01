@@ -75,7 +75,7 @@
     <div class="card-container" ref="scrollContainer">
       <el-row :gutter="40">
         <!-- 循环生成30个卡片 -->
-        <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id">
+        <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id" v-if="index !== 0">
           
           <!-- itemfilter -->
           <el-card class="card">
@@ -144,7 +144,7 @@ export default {
       // 确保此时数据已加载
       this.sortedAndFilteredCharacters();
       this.$nextTick(() => {
-        for (let index = 0; index < this.characters.length; index++) {
+        for (let index = 1; index < this.characters.length; index++) {
           // 注意：这里假设你有一个 characters 数组已经被填充
           this.initRadarChart('radar-' + index,index );
         }
@@ -540,7 +540,7 @@ export default {
       try {
         console.log(id,"现在是啥id");
         // 动态导入图片，注意路径要正确匹配你的文件结构
-        const numericId = Number(id)+1;
+        const numericId = Number(id) + 1;
 
         console.log(`@/assets/genshinava/${numericId}.png`);
         return require(`@/assets/genshinava/${numericId}.png`);
