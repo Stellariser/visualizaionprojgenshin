@@ -67,7 +67,7 @@ export default {
       });
     });
 
-    console.log(this.characters, 'characters');
+    console.log(this.characters, 'characters');  
   },
   name: "team",
 
@@ -109,7 +109,15 @@ export default {
     },
 
     RoleInTeam(roleId) {
-      return this.characters[Number(roleId)].stats.tag1;
+      let role = '';
+      if (this.characters[Number(roleId)].stats.tag2.length === 0){
+        return this.characters[Number(roleId)].stats.tag1;
+      }
+      else {
+        role = this.characters[Number(roleId)].stats.tag1 + ' / ' + this.characters[Number(roleId)].stats.tag2;
+        return role;
+      }
+      
     },
 
   /**.

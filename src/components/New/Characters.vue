@@ -130,6 +130,8 @@
 <script>
 import Papa from 'papaparse';
 import * as echarts from "echarts";
+// import DamageCycle from "./DamageCycle";
+
 export default {
   mounted() {
 
@@ -514,6 +516,7 @@ export default {
   methods: {
     handleButtonClick2(roleId) {
       // 检查角色是否已经在队伍中
+      roleId=Number(roleId)+1;
       if (this.$store.state.selectedRoles.includes(roleId)) {
         this.$notify.error({
           title: 'Ouch...',
@@ -1006,6 +1009,7 @@ export default {
 .card {
   margin-bottom: 20px;
   transition: transform 0.3s ease;
+  height: 50%;
 
 }
 .card:hover {
