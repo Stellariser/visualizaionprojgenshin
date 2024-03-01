@@ -4,19 +4,26 @@
       <el-col :span="6" v-for="(roleId, index) in selectedRoles" :key="index">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span>Role Type</span>
+            <span :class="RoleType(roleId)">{{ RoleInTeam(roleId) }}</span>
+            <!-- <span> roleId </span> -->
           </div>
           <div style="text-align: center;">
-            <img :src="getAvatarSrc(roleId)" alt="角色头像" style="height: 200px; width: auto;">
+            <img :src="getAvatarSrc(Number(roleId)-1)" alt="角色头像" style="height: 200px; width: auto;">
           </div>
           <el-button type="primary" @click="openDialog(index)" style="margin-top: 5px">详情</el-button>
         </el-card>
       </el-col>
     </el-row>
+
+    <!-- <el-col :span="20"><div class="grid-content bg-purple-dark">
+        <div ref="radar" id="radar" style="height:800px;width:100%;"></div>
+      </div></el-col> -->
+
+
     <el-dialog :visible.sync="dialogVisible" width="60%">
       <div class="card-container" ref="scrollContainer">
         <el-row :gutter="20">
-          <el-col :span="11" v-for="(character, index) in characters" :key="character.id">
+          <el-col :span="11" v-for="(character, index) in characters" :key="character.id" v-if="index !== 0">
             <el-card class="card">
               <div>
                 <!-- 角色头像 -->
@@ -24,7 +31,7 @@
               </div>
               <div>
                 <!-- 操作按钮 -->
-                <el-button type="primary" @click="addToTeam(character.id)">Add to team</el-button>
+                <el-button type="primary" @click="addToTeam(Number(character.id)+1), TeamScoreCalc()">Add to team</el-button>
               </div>
             </el-card>
           </el-col>
@@ -40,44 +47,154 @@
 import Papa from "papaparse";
 import * as echarts from "echarts";
 
+
 export default {
+
+
+  mounted() {
+
+    this.loadCSVData().then(() => {
+      // 确保此时数据已加载
+      // this.sortedAndFilteredCharacters();
+      this.$nextTick(() => {
+        // for (let index = 0; index < this.characters.length; index++) {
+        //   // 注意：这里假设你有一个 characters 数组已经被填充
+        //   this.initRadarChart('radar-' + index,index );
+        // }
+        console.log('在动吗')
+
+
+      });
+    });
+
+    console.log(this.characters, 'characters');
+  },
+  name: "team",
+
   computed: {
     // 从 Vuex 获取 selectedRoles 数组
     selectedRoles() {
       return this.$store.state.selectedRoles;
-    }
+    },
+
+
+
   },
 
-  mounted() {
-    this.loadCSVData().then(() => {
-      // 确保此时数据已加载
-      this.sortedAndFilteredCharacters();
-      this.$nextTick(() => {
-        for (let index = 0; index < this.characters.length; index++) {
-          // 注意：这里假设你有一个 characters 数组已经被填充
-          this.initRadarChart('radar-' + index,index );
-        }
-
-      });
-    });
-    console.log(this.characters, 'characters');
-  },
-  name: "team",
   data() {
     return {
       dialogVisible: false,
       currentRoleIndex: null,
       characters: [],
-
+      // 队伍分数，供队伍能力可视化使用
+      teamScore: [
+        0,  // 队伍ATK得分，大约在[0, 1500]
+        0,  // 队伍DEF得分，大约在[0，4000]
+        0,  // 队伍HP得分，回血能力，一般情况下在[0，150]，但选四个奶妈能达到550
+        20, // 队伍伤害轴长度，一般都是20s，数据集里也没有，索性写死了
+        0,  // 队伍COST，[0, 20]，是队伍的总星级，评判队伍是否昂贵的标准
+      ],
     }
   },
   methods: {
+
+
+    RoleType(roleId) {
+      return {
+        'Style_Vice_DamageDealer': this.characters[Number(roleId)].stats.tag1 === 'Vice_DamageDealer',
+        'Style_Damage_Dealer': this.characters[Number(roleId)].stats.tag1 === 'Damage_Dealer',
+        'Style_Healer': this.characters[Number(roleId)].stats.tag1 === 'Healer',
+        'Style_Support': this.characters[Number(roleId)].stats.tag1 === 'Support',
+      }
+    },
+
+    RoleInTeam(roleId) {
+      return this.characters[Number(roleId)].stats.tag1;
+    },
+
+  /**.
+   * 团队能力值算法：
+   * TEAM atk score = sum(.score_atk_tag1 + .score_atk_tag2) * max(.coef_atkspt);
+   * TEAM def score = sum(.def) * max(.coef_defspt);
+   * TEAM hp score  = sum(.score_hlr_tag1 + .score_hlr_tag2) * max(.coef_hpspt);
+   */
+    teamATKscore() {  // 计算团队ATK得分
+      let score=0;
+      let atkcoef=1;
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          score += Number(this.characters[Number(this.selectedRoles[index])].stats.score_atk_tag2) + Number(this.characters[Number(this.selectedRoles[index])].stats.score_atk_tag1);
+      }
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          if (Number(this.characters[Number(this.selectedRoles[index])].stats.coef_atkspt) > atkcoef){
+            atkcoef = Number(this.characters[Number(this.selectedRoles[index])].stats.coef_atkspt)
+          }
+      }
+      score*=atkcoef;
+      score=Number(score.toFixed(2));
+      this.teamScore[0]=score;
+      console.log("团队atk得分: ",score)
+    },
+
+    teamDEFscore() {  // 计算团队DEF得分
+      let score=0;
+      let defcoef=1;
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          score += Number(this.characters[Number(this.selectedRoles[index])].stats.def_90_90_ac);
+      }
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          if (Number(this.characters[Number(this.selectedRoles[index])].stats.coef_defspt) > defcoef){
+            defcoef = Number(this.characters[Number(this.selectedRoles[index])].stats.coef_defspt)
+          }
+      }
+      score*=defcoef;
+      score=Number(score.toFixed(2));
+      this.teamScore[1]=score;
+      console.log("团队def得分: ",score)
+    },
+
+    teamHPscore() { // 计算团队HP得分
+      let score=0;
+      let hlrcoef=1;
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          score += Number(this.characters[Number(this.selectedRoles[index])].stats.score_hlr_tag2) + Number(this.characters[Number(this.selectedRoles[index])].stats.score_hlr_tag1);
+      }
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          if (Number(this.characters[Number(this.selectedRoles[index])].stats.coef_hpspt) > hlrcoef){
+            hlrcoef = Number(this.characters[Number(this.selectedRoles[index])].stats.coef_hpspt)
+          }
+      }
+      score*=hlrcoef;
+      score=Number(score.toFixed(2));
+      this.teamScore[2]=score;
+      console.log("团队hp得分: ",score)
+    },
+
+    teamCost() { // 计算团队cost，就是所有队员星级加起来，让用户知道这队的造价是否昂贵
+      let score=0;
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          score += Number(this.characters[Number(this.selectedRoles[index])].rarity);
+      }
+      this.teamScore[4]=score;
+      console.log("团队cost: ",score)
+    },
+
+    TeamScoreCalc() {  // 计算团队所有需要计算的项
+      this.teamATKscore();
+      this.teamDEFscore();
+      this.teamHPscore();
+      this.teamCost();
+      console.log("当前团队值: [ATK, DEF, HP, PRD, COST]", this.teamScore)
+    },
+
+
+
     openDialog(index) {
       this.currentRoleIndex = index; // 保存当前操作的角色位置
       this.dialogVisible = true;
     },
     addToTeam(id) {
       // 替换指定位置的角色ID
+  
       this.$set(this.selectedRoles, this.currentRoleIndex, id);
 
       // 关闭对话框
@@ -86,10 +203,12 @@ export default {
     getAvatarSrc(id) {
       if (!isNaN(id)) { // 确保 id 是一个数字
         try {
-          const numericId = Number(id);
+          const numericId = Number(id) + 1;
+          // console.log(id)
           // 当 id 为 0 时，直接使用 0.png，否则使用 id+1 的图片
-          const imageName = numericId === 0 ? 0 : numericId + 1;
-          console.log(`Rendering image for ID: ${id}, using image: ${imageName}.png`);
+          const imageName = numericId;
+          // const imageName = numericId === 0 ? 0 : numericId + 1;
+          // console.log(`Rendering image for ID: ${id}, using image: ${imageName}.png`);
           return require(`@/assets/genshinava/${imageName}.png`);
         } catch (e) {
           console.error(e);
@@ -115,6 +234,10 @@ export default {
       }
       return null;
     },
+
+
+
+
     loadCSVData() {
       return new Promise((resolve, reject) => {
         fetch('./data/genshinv1.csv')
@@ -197,6 +320,22 @@ export default {
                         elemental_mastery: character.elem_mastery_ac !== 'NA' ? character.elem_mastery_ac : null,
                         energy_recharge: character.elem_recharge_ac !== 'NA' ? character.elem_recharge_ac : null,
                         healing_bonus: character.heal_bns_ac !== 'NA' ? character.heal_bns_ac : null,
+                        // team metric
+                        /**.
+                         * TEAM atk score = sum(.score_atk_tag1 + .score_atk_tag2) * max(.coef_atkspt);
+                         * TEAM def score = sum(.def) * max(.coef_defspt);
+                         * TEAM hp score  = sum(.score_hlr_tag1 + .score_hlr_tag2) * max(.coef_hpspt);
+                         */
+                        score_atk_tag1: character.score_atk_tag1 !== 'NA' ? character.score_atk_tag1 : null,
+                        score_atk_tag2: character.score_atk_tag2 !== 'NA' ? character.score_atk_tag2 : null,
+                        score_hlr_tag1: character.score_hlr_tag1 !== 'NA' ? character.score_hlr_tag1 : null,
+                        score_hlr_tag2: character.score_hlr_tag1 !== 'NA' ? character.score_hlr_tag2 : null,
+                        coef_atkspt: character.coef_atkspt !== 'NA' ? character.coef_atkspt : null,
+                        coef_defspt: character.coef_defspt !== 'NA' ? character.coef_defspt : null,
+                        coef_hpspt: character.coef_hpspt !== 'NA' ? character.coef_hpspt : null,
+
+                        tag1: character.tag1 !== 'NA' ? character.tag1 : null,
+                        tag2: character.tag2 !== 'NA' ? character.tag2 : null,
                       },
                       releaseDate: character.release_date !== 'NA' ? character.release_date : null,
                       weaponType: character.weapon_type !== 'NA' ? character.weapon_type : null,
@@ -233,6 +372,25 @@ export default {
   width: 100%;
 }
 
+.radar {
+  z-index: 1000;
+}
 
+.Style_Vice_DamageDealer {
+  color: rgb(201, 159, 21);
+  font-weight: bold;
+}
+.Style_Damage_Dealer {
+  color: rgb(189, 14, 14);
+  font-weight: bold;
+}
+.Style_Healer {
+  color: rgb(12, 172, 71);
+  font-weight: bold;
+}
+.Style_Support {
+  color: rgb(24, 24, 161);
+  font-weight: bold;
+}
 
 </style>

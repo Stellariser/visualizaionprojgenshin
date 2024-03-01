@@ -71,7 +71,7 @@
 
     <el-row>
       <el-col :span="20"><div class="grid-content bg-purple-dark">
-        <div ref="radar" id="radar" style="height:800px;width:100%;"></div>
+        <div ref="radar" id="radar" style="height:800px;width:100%;">where</div>
       </div></el-col>
       <el-col :span="6"><div class="grid-content bg-purple-dark">
         <div class="select_btn">
@@ -762,9 +762,10 @@ export default {
     },
 
     handleSelectChange(value) {
+      console.log("triggered")
       this.selectedAttributes = value.map(name => {
         const index = this.names.indexOf(name);
-        console.log(index, "index")
+        console.log(index, "index1")
         console.log(this.select_value, "select_value")
         console.log(this.attributes[index], "attributes[index]");
         this.OverallValue = [0,0,0,0,0,0,0,0,0,0,0,0]

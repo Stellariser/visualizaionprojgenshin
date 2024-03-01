@@ -2,10 +2,10 @@
   <el-container>
    <el-header>
     <el-select v-model="selectedSort" placeholder="请选择排序方式" @change="sortCharacters">
-      <el-option label="ordered by id" value=""></el-option>
-      <el-option label="ordered by attack" value="atk_90_90_ac"></el-option>
-      <el-option label="ordered by defense" value="def_90_90_ac"></el-option>
-      <el-option label="ordered by hp" value="hp_90_90_ac"></el-option>
+      <el-option label="ordered by ID" value=""></el-option>
+      <el-option label="ordered by ATK" value="atk_90_90_ac"></el-option>
+      <el-option label="ordered by DEF" value="def_90_90_ac"></el-option>
+      <el-option label="ordered by HP" value="hp_90_90_ac"></el-option>
 
     </el-select>
   </el-header>
@@ -75,11 +75,11 @@
     <div class="card-container" ref="scrollContainer">
       <el-row :gutter="40">
         <!-- 循环生成30个卡片 -->
-        <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id">
+        <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id" v-if="index !== 0">
           
           <!-- itemfilter -->
           <el-card class="card">
-            <el-row :span="20">
+            <el-row :span="16">
               <!-- 头像列 -->
               <el-col :span="8">
 <!--                <img :src="require('@/assets/avatar/ganyu.jpg')" class="avatar" alt="avatar">-->
@@ -109,6 +109,14 @@
                   Add to Team
                 </vs-button>
               </el-col>
+              <el-col :span="4">
+                <el-tag type="success">{{ character.tag1 }}</el-tag>
+              </el-col>
+              <p v-if="character.tag2.length > 0">
+                <el-col :span="4">
+                  <el-tag type="info">{{ character.tag2 }}</el-tag>
+                </el-col>
+              </p>
 
             </el-row>
           </el-card>
@@ -136,7 +144,7 @@ export default {
       // 确保此时数据已加载
       this.sortedAndFilteredCharacters();
       this.$nextTick(() => {
-        for (let index = 0; index < this.characters.length; index++) {
+        for (let index = 1; index < this.characters.length; index++) {
           // 注意：这里假设你有一个 characters 数组已经被填充
           this.initRadarChart('radar-' + index,index );
         }
@@ -532,7 +540,7 @@ export default {
       try {
         console.log(id,"现在是啥id");
         // 动态导入图片，注意路径要正确匹配你的文件结构
-        const numericId = Number(id)+1;
+        const numericId = Number(id) + 1;
 
         console.log(`@/assets/genshinava/${numericId}.png`);
         return require(`@/assets/genshinava/${numericId}.png`);
@@ -924,6 +932,10 @@ export default {
                   releaseDate: character.release_date !== 'NA' ? character.release_date : null,
                   weaponType: character.weapon_type !== 'NA' ? character.weapon_type : null,
                   ascension: character.ascension !== 'NA' ? character.ascension : null,
+                  // chara recommendation & team evaluation
+                  tag1: character.tag1 !== 'NA' ? character.tag1 : null,
+                  tag2: character.tag2 !== 'NA' ? character.tag2 : null,
+                  glbtier_tag1: character.glbtier_tag1 !== 'NA' ? character.glbtier_tag1 : null,
                   id: character.id !== 'NA' ? character.id : null,
                       // Add other properties as needed
                     };
