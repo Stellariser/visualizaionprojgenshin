@@ -2,10 +2,10 @@
   <el-container>
    <el-header>
     <el-select v-model="selectedSort" placeholder="请选择排序方式" @change="sortCharacters">
-      <el-option label="ordered by id" value=""></el-option>
-      <el-option label="ordered by attack" value="atk_90_90_ac"></el-option>
-      <el-option label="ordered by defense" value="def_90_90_ac"></el-option>
-      <el-option label="ordered by hp" value="hp_90_90_ac"></el-option>
+      <el-option label="ordered by ID" value=""></el-option>
+      <el-option label="ordered by ATK" value="atk_90_90_ac"></el-option>
+      <el-option label="ordered by DEF" value="def_90_90_ac"></el-option>
+      <el-option label="ordered by HP" value="hp_90_90_ac"></el-option>
 
     </el-select>
   </el-header>
@@ -935,7 +935,7 @@ export default {
                   // chara recommendation & team evaluation
                   tag1: character.tag1 !== 'NA' ? character.tag1 : null,
                   tag2: character.tag2 !== 'NA' ? character.tag2 : null,
-
+                  glbtier_tag1: character.glbtier_tag1 !== 'NA' ? character.glbtier_tag1 : null,
                   id: character.id !== 'NA' ? character.id : null,
                       // Add other properties as needed
                     };
