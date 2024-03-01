@@ -130,7 +130,7 @@
 <script>
 import Papa from 'papaparse';
 import * as echarts from "echarts";
-// import DamageCycle from "./DamageCycle";
+
 
 export default {
   mounted() {

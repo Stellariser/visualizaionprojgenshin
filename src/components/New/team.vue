@@ -13,6 +13,12 @@
           <el-button type="primary" @click="openDialog(index)" style="margin-top: 5px">详情</el-button>
         </el-card>
       </el-col>
+      <el-col :span="8">
+        <div ref="TeamScore" style="height:300px;width:100%;"></div>
+      </el-col>
+      <!-- <el-col :span="16">
+        <div ref="DamageCycle" style="height:300px;width:100%;"></div>
+      </el-col> -->
     </el-row>
 
     <!-- <el-col :span="20"><div class="grid-content bg-purple-dark">
@@ -49,11 +55,17 @@ import * as echarts from "echarts";
 
 
 export default {
-
+  
+  // beforeRouteEnter(to, from, next) {
+  //   // 在路由切换开始之前触发
+  //   console.log('路由即将切换')
+  //   next() // 继续路由切换
+  // },
 
   mounted() {
-
+    
     this.loadCSVData().then(() => {
+      this.TeamScoreCalc()
       // 确保此时数据已加载
       // this.sortedAndFilteredCharacters();
       this.$nextTick(() => {
@@ -62,7 +74,11 @@ export default {
         //   this.initRadarChart('radar-' + index,index );
         // }
         console.log('在动吗')
-
+        this.DCchart = echarts.init(this.$refs.DamageCycle);
+        this.DCchart.setOption(this.DCoption);
+        this.TSchart = echarts.init(this.$refs.TeamScore);
+        this.TSchart.setOption(this.TSoption);
+        // this.getTS();
 
       });
     });
@@ -81,12 +97,22 @@ export default {
 
   },
 
+  watch: {
+    selectedRoles(newValue, oldValue) {
+    console.log('数组变化了!!!!!');
+    this.TeamScoreCalc()
+    }
+  },
+
   data() {
     return {
       dialogVisible: false,
       currentRoleIndex: null,
       characters: [],
-      // 队伍分数，供队伍能力可视化使用
+      /**
+       * 队伍分数，供队伍能力可视化使用
+       * (侧边栏removeRole)
+       * */ 
       teamScore: [
         0,  // 队伍ATK得分，大约在[0, 1500]
         0,  // 队伍DEF得分，大约在[0，4000]
@@ -94,10 +120,92 @@ export default {
         20, // 队伍伤害轴长度，一般都是20s，数据集里也没有，索性写死了
         0,  // 队伍COST，[0, 20]，是队伍的总星级，评判队伍是否昂贵的标准
       ],
+      TSchart: null,
+      TSoption : {
+        title: {
+          text: 'Team Score'
+        },
+        tooltip: {
+          show: true,
+        },
+        legend: {
+          // data: ['Allocated Budget', 'Actual Spending']
+        },
+        radar: {
+          center: ['50%','60%'],
+          // shape: 'circle',
+          indicator: [
+            { name: 'ATK', max: 2000 },
+            { name: 'DEF', max: 4000 },
+            { name: 'HP', max: 200 },
+            { name: 'DMG Cycle', max: 25 },
+            { name: 'COST', max: 20 },
+          ]
+        },
+        series: [
+          {
+            name: 'Budget vs spending',
+            type: 'radar',
+            data: [
+                {
+                    value: [0, 0, 0, 0, 0],
+
+                    symbol: 'rect',
+                    symbolSize: 12,
+                    lineStyle: {
+                      type: 'dashed'
+                    },
+                    label: {
+                      show: true,
+                      formatter: function (params) {
+                        return params.value;
+                      }
+                    }
+                }
+            ]
+          }
+        ]
+      },
+
+
+
+      DCchart: null,
+      DCoption : {
+        visualMap: {
+          show: false,
+          min: 0,
+          max: 10000
+        },
+        calendar: {
+          range: '2017'
+        },
+        series: {
+          type: 'heatmap',
+          coordinateSystem: 'calendar',
+          data: this.getVirtualData('2017')
+        }
+      }
     }
   },
   methods: {
 
+    getTS() {
+      return this.teamScore;
+    },
+
+    getVirtualData(year) {
+      const date = +echarts.time.parse(year + '-01-01');
+      const end = +echarts.time.parse(+year + 1 + '-01-01');
+      const dayTime = 3600 * 24 * 1000;
+      const data = [];
+      for (let time = date; time < end; time += dayTime) {
+        data.push([
+          echarts.time.format(time, '{yyyy}-{MM}-{dd}', false),
+          Math.floor(Math.random() * 10000)
+        ]);
+      }
+      return data;
+    },
 
     RoleType(roleId) {
       return {
@@ -187,11 +295,18 @@ export default {
     },
 
     TeamScoreCalc() {  // 计算团队所有需要计算的项
+      this.teamScore = [0, 0, 0, 20, 0];
       this.teamATKscore();
       this.teamDEFscore();
       this.teamHPscore();
       this.teamCost();
       console.log("当前团队值: [ATK, DEF, HP, PRD, COST]", this.teamScore)
+      console.log(this.getTS(),"getts")
+      this.TSoption.series[0].data[0].value = this.teamScore;
+      console.log(this.TSoption.series[0].data[0].value,"radarval") // byd要加[0]
+      this.TSchart = echarts.init(this.$refs.TeamScore);
+      this.TSchart.setOption(this.TSoption);
+      console.log("图表更新")
     },
 
 
