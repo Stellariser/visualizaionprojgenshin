@@ -29,7 +29,7 @@
     <el-dialog :visible.sync="dialogVisible" width="60%">
       <div class="card-container" ref="scrollContainer">
         <el-row :gutter="20">
-          <el-col :span="11" v-for="(character, index) in characters" :key="character.id" v-if="index !== 0">
+          <el-col :span="6" v-for="(character, index) in characters" :key="character.id" v-if="index !== 0">
             <el-card class="card">
               <div>
                 <!-- 角色头像 -->
@@ -1110,12 +1110,26 @@ export default {
 </script>
 
 <style scoped>
+.card{
+  min-height: 300px;
+}
+
 .box-card {
   width: 100%;
   margin: 20px 0;
+  transition: transform 0.3s ease;
 }
+.box-card:hover {
+  transform: scale(1.05); /* 鼠标悬停时放大5% */
+}
+.card:hover {
+   transform: scale(1.05); /* 鼠标悬停时放大5% */
+ }
+
 .el-container, .el-row {
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .radar {
