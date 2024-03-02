@@ -3,7 +3,8 @@
     <!--头部区域-->
     <el-header>
       <div>
-        <span>Genshin Teaming Assistant</span>
+        <!-- <span>Genshin Teaming Assistant</span> -->
+        <img src="../assets/GenSynergy_ba-style.png" alt="Genshin Teaming Assistant"> 
       </div>
       <el-button type="info" @click="logout">Exit</el-button>
     </el-header>

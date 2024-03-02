@@ -2,23 +2,23 @@
   <el-container>
     <el-row :gutter="40" >
       <el-col :span="6" v-for="(roleId, index) in selectedRoles" :key="index">
-        <el-card class="box-card">
+        <el-card class="box-card" style="height: 300px;">
           <div slot="header" class="clearfix">
             <span :class="RoleType(roleId)">{{ RoleInTeam(roleId) }}</span>
             <!-- <span> roleId </span> -->
           </div>
-          <div style="text-align: center;">
+          <div @click="openDialog(index)" style="text-align: center;">
             <img :src="getAvatarSrc(Number(roleId)-1)" alt="角色头像" style="height: 200px; width: auto;">
           </div>
-          <el-button type="primary" @click="openDialog(index)" style="margin-top: 5px">详情</el-button>
+          <!-- <el-button type="primary" @click="openDialog(index)" style="margin-top: 5px">详情</el-button> -->
         </el-card>
       </el-col>
-      <el-col :span="8">
-        <div ref="TeamScore" style="height:300px;width:100%;"></div>
+      <el-col :span="10">
+        <div ref="TeamScore" style="height:600px;width:100%;"></div>
       </el-col>
-      <!-- <el-col :span="16">
-        <div ref="DamageCycle" style="height:300px;width:100%;"></div>
-      </el-col> -->
+      <el-col :span="14">
+        <div ref="DamageCycle" style="height:600px;width:100%;"></div>
+      </el-col>
     </el-row>
 
     <!-- <el-col :span="20"><div class="grid-content bg-purple-dark">
@@ -58,7 +58,7 @@ export default {
   
   // beforeRouteEnter(to, from, next) {
   //   // 在路由切换开始之前触发
-  //   console.log('路由即将切换')
+  //   // console.log('路由即将切换')
   //   next() // 继续路由切换
   // },
 
@@ -73,17 +73,18 @@ export default {
         //   // 注意：这里假设你有一个 characters 数组已经被填充
         //   this.initRadarChart('radar-' + index,index );
         // }
-        console.log('在动吗')
-        this.DCchart = echarts.init(this.$refs.DamageCycle);
-        this.DCchart.setOption(this.DCoption);
+        // console.log('在动吗')
+
         this.TSchart = echarts.init(this.$refs.TeamScore);
         this.TSchart.setOption(this.TSoption);
+        this.DCchart = echarts.init(this.$refs.DamageCycle);
+        this.DCchart.setOption(this.DCoption);
         // this.getTS();
 
       });
     });
 
-    console.log(this.characters, 'characters');  
+    // console.log(this.characters, 'characters');  
   },
   name: "team",
 
@@ -99,7 +100,7 @@ export default {
 
   watch: {
     selectedRoles(newValue, oldValue) {
-    console.log('数组变化了!!!!!');
+    // console.log('数组变化了!!!!!');
     this.TeamScoreCalc()
     }
   },
@@ -135,9 +136,9 @@ export default {
           center: ['50%','60%'],
           // shape: 'circle',
           indicator: [
-            { name: 'ATK', max: 2000 },
+            { name: 'ATK', max: 4000 },
             { name: 'DEF', max: 4000 },
-            { name: 'HP', max: 200 },
+            { name: 'HP', max: 400 },
             { name: 'DMG Cycle', max: 25 },
             { name: 'COST', max: 20 },
           ]
@@ -167,23 +168,73 @@ export default {
         ]
       },
 
-
-
+      DCnamae: [],
+      DCdata : [],
+      DCxaxis: [],
       DCchart: null,
       DCoption : {
-        visualMap: {
-          show: false,
-          min: 0,
-          max: 10000
+        
+        tooltip: {
+          // trigger: 'axis',
+          // axisPointer: {
+          //   // Use axis to trigger tooltip
+          //   type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+          // }
         },
-        calendar: {
-          range: '2017'
+        legend: {},
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
         },
-        series: {
-          type: 'heatmap',
-          coordinateSystem: 'calendar',
-          data: this.getVirtualData('2017')
-        }
+        xAxis: {
+          type: 'value',
+          data: {
+            value : Array.from({ length: 10 }, (value, index) => index + 1)
+          }
+        },
+        yAxis: [ 
+          {
+            type: 'category',
+            show: false,
+            data: ['Member1', 'Member2', 'Member3', 'Member4', 'Member1', 'Member2', 'Member3', 'Member4']
+          },
+          {
+            data: [1, 2, 3, 4],
+            show: false,
+          },
+          {
+            type: 'category',
+            data: ['Member1', 'Member2', 'Member3', 'Member4'],
+            position: 'left',
+            axisLabel: {
+                margin: 20,
+                fontSize: 14 // 设置 Y 轴标签的字号为 14px
+            }
+          },
+        ],
+        series: [
+          {
+            name: 'Direct',
+            type: 'bar',
+            stack: 'total',
+            label: {
+              show: true
+            },
+            emphasis: {
+              focus: 'series'
+            },
+            data: [
+              [320, 302, 301, 334],
+              [320, 302, 301, 334],
+              [320, 302, 301, 334],
+              [320, 302, 301, 334],
+              
+            ]
+          }
+        ]
+      
       }
     }
   },
@@ -248,7 +299,7 @@ export default {
       score*=atkcoef;
       score=Number(score.toFixed(2));
       this.teamScore[0]=score;
-      console.log("团队atk得分: ",score)
+      // console.log("团队atk得分: ",score)
     },
 
     teamDEFscore() {  // 计算团队DEF得分
@@ -265,7 +316,7 @@ export default {
       score*=defcoef;
       score=Number(score.toFixed(2));
       this.teamScore[1]=score;
-      console.log("团队def得分: ",score)
+      // console.log("团队def得分: ",score)
     },
 
     teamHPscore() { // 计算团队HP得分
@@ -282,7 +333,7 @@ export default {
       score*=hlrcoef;
       score=Number(score.toFixed(2));
       this.teamScore[2]=score;
-      console.log("团队hp得分: ",score)
+      // console.log("团队hp得分: ",score)
     },
 
     teamCost() { // 计算团队cost，就是所有队员星级加起来，让用户知道这队的造价是否昂贵
@@ -291,7 +342,554 @@ export default {
           score += Number(this.characters[Number(this.selectedRoles[index])].rarity);
       }
       this.teamScore[4]=score;
-      console.log("团队cost: ",score)
+      // console.log("团队cost: ",score)
+    },
+
+    DCcalc() {
+
+      let [i,j,k] = [0,0,0];
+      let buffer0 = 0;
+      // 初始化判断数组：人数*[人名，q技能cd，e技能cd，优先级]，4*4
+      let cdpri = [];
+      for (i = 0; i < 4; i++) {
+        let row = [];
+        for (j = 0; j < 4; j++) {
+            row.push(0);
+        }
+        cdpri.push(row);
+      }
+      // this.characters.map(item => // console.log(item.stats.qskill_cd));
+
+      // 遍历已选择角色，优先级：spt>dd>vdd>hlr，加上随机数防同职业相等优先级
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+        buffer0 = Number(this.selectedRoles[index]);
+        cdpri[index][0] = this.characters[buffer0].name;
+        cdpri[index][1] = 0;
+        // // console.log("q技能读到多少", this.characters[buffer0].stats.qskill_cd)
+        // // console.log("赋值多少", cdpri[index][1])
+        cdpri[index][2] = 0;
+        // cdpri[index][1] = parseInt(this.characters[buffer0].stats.qskill_cd);
+        // cdpri[index][2] = parseInt(this.characters[buffer0].stats.eskill_cd);
+
+        switch (this.characters[buffer0].stats.tag1) {
+          case 'Support':
+            cdpri[index][3] = 4 + Math.random();
+            break;
+          case 'Damage_Dealer':
+            cdpri[index][3] = 3 + Math.random();
+            break;
+          case 'Vice_DamageDealer':
+            cdpri[index][3] = 2 + Math.random();
+            break;
+          case 'Healer':
+            cdpri[index][3] = 1 + Math.random();
+            break;
+        }
+      }
+        
+        // 按照优先级重排数组
+        // console.log("排序之前的数组",cdpri)
+        // console.log("赋值多少", cdpri[0][1], cdpri[1][1], cdpri[2][1], cdpri[3][1])
+        let cdpri_s = this.sortByRow(cdpri, 3);
+        // console.log("排序以后的数组",cdpri_s)
+        this.DCnamae=cdpri_s.map(row => row[0]);
+        console.log("名字",this.DCnamae)
+
+        // 优先级从大到小
+
+        /**
+         * 行动逻辑：
+         * - 谁CD好了谁上
+         * - CD都好了谁优先级数字大谁上
+         * - CD都没好就切主C平A（4以下优先级数字最大的）
+         * - 同一人可以同时放Q和E，切人cd算1s
+         */
+
+        // 初始化行动数组，size=人数*轴长*【‘是否行动’，‘行动状态q’，‘行动状态e’】，4*20*3
+        let koudou = [];
+        for (i = 0; i < 4; i++) {
+          let depthArray = []; 
+          for (j = 0; j < 20; j++) {
+              let rowArray = [];
+              for (k = 0; k < 3; k++) {
+                  rowArray.push(0);
+              }
+              depthArray.push(rowArray);
+          }
+          koudou.push(depthArray);
+        }
+
+        // 开始判断
+        for (i = 0; i < 20; i++) {
+          // // console.log(i,"s")
+          let depthArray = []; 
+          let buffer = 0;
+          let maxturn = 0;
+
+          for (k = 0; k < 4; k ++){
+            koudou[k][i][0] = 0;  // 行动点数清零
+          }
+
+          for (j = 0; j < 4; j++) {
+            buffer = this.characters.findIndex(item => item.name === cdpri_s[j][0]);
+            // // // console.log(cdpri_s[j][0],this.characters[buffer].name)
+            if(cdpri_s[j][1] == 0) {    // q技能
+              // // console.log(this.characters[buffer].name,"，Q技能持续时间为",Number(this.characters[buffer].stats.qskill_lst))
+              maxturn = this.getMin(Number(this.characters[buffer].stats.qskill_lst),20-i-1)
+              for (k = 0; k < maxturn; k ++){             
+                koudou[j][i+k][1] = 1;      // 接下来【q技能持续时间】内的状态: 放q技能中
+              }
+              koudou[j][i][0] = 1;      // 行动点数置1
+              cdpri_s[j][1] = this.characters[buffer].stats.qskill_cd; // q技能进入cd
+              if(cdpri_s[j][2] == 0) {  // q技能和e技能
+                // // console.log(this.characters[buffer].name,"，Q-E技能持续时间为",Number(this.characters[buffer].stats.eskill_lst))
+                maxturn = this.getMin(Number(this.characters[buffer].stats.eskill_lst),20-i-1)
+                for (k = 0; k < maxturn; k ++){
+                  koudou[j][i+k][2] = 1;      // 接下来【e技能持续时间】内的状态: 放e技能中
+                }
+                cdpri_s[j][2] = this.characters[buffer].stats.eskill_cd; // e技能进入cd
+                // // console.log("[q&e]运行到",j,"跳出")
+                break;
+              }
+              // // console.log("[q]运行到",j,"跳出")
+              break;
+            }
+            else if(cdpri_s[j][2] == 0) {    // e技能
+              // // console.log(this.characters[buffer].name,"，E技能持续时间为",Number(this.characters[buffer].stats.eskill_lst))
+              maxturn = this.getMin(Number(this.characters[buffer].stats.eskill_lst),20-i-1)
+              for (k = 0; k < maxturn; k ++){
+                // // console.log(k,"这里还有")
+                koudou[j][i+k][2] = 1;      // 接下来【e技能持续时间】内的状态: 放e技能中
+              }
+              // // // console.log("这里还有")
+              koudou[j][i][0] = 1;      // 行动点数置1
+              cdpri_s[j][2] = this.characters[buffer].stats.eskill_cd; // e技能进入cd
+              // // console.log("[e]运行到",j,"跳出")
+              break;
+            }
+
+            if (j == 3) {
+              // 如果每个人的cd都没好，不会触发break，即切到主C平A
+              for (k = 0; k < 4; k ++){
+                if (cdpri_s[k][3] < 4){
+                  koudou[k][i][0] = 1;    // 第一个优先级不大于4的是主C
+                  break;
+                }
+                if(k == 3) {
+                  koudou[k][i][0] = 1;      // 要是选了四个辅助那就最后一位打伤害吧
+                }
+                
+              }
+            }
+
+          }
+
+          for (k = 0; k < 4; k ++){
+            
+            cdpri_s[k][1] = cdpri_s[k][1] == 0 ? cdpri_s[k][1]:cdpri_s[k][1]-1;    // q技能cd-1
+            cdpri_s[k][2] = cdpri_s[k][2] == 0 ? cdpri_s[k][2]:cdpri_s[k][2]-1;    // e技能cd-1
+          }
+          // // console.log("此时四人行动", koudou[0][i][0], koudou[1][i][0], koudou[2][i][0], koudou[3][i][0])
+          // // console.log("四人Q技能轴 ", koudou[0][i][1], koudou[1][i][1], koudou[2][i][1], koudou[3][i][1])
+          // // console.log("四人E技能轴 ", koudou[0][i][2], koudou[1][i][2], koudou[2][i][2], koudou[3][i][2])
+          
+        }
+        // // console.log("行动矩阵", koudou)
+        this.DCdata=koudou;
+        // console.log("行动矩阵", this.DCdata)
+    },
+
+    getMin(a, b) {
+      return a > b ? b : a;
+    },
+    sortByRow(array, rowIndex) {
+        // 先根据指定行的值创建一个包含行索引和对应值的对象数组
+        let rowWithValue = array.map((row, index) => ({ index, value: row[rowIndex] }));
+        
+        // 对对象数组按照值进行排序
+        rowWithValue.sort((a, b) => b.value - a.value);
+        
+        // 根据排序后的行索引，重新排列原数组的顺序
+        let sortedArray = rowWithValue.map(row => array[row.index]);
+        
+        return sortedArray;
+    },
+
+    // 从行动矩阵生成堆叠图数据
+    // 行动数组，size=人数*轴长*【‘是否行动’，‘行动状态q’，‘行动状态e’】，4*20*3
+    stackGen(){
+      let [i,j,k] = [0,0,0];
+      let len = 0;
+
+      let stack = [];
+      let stats = [];
+
+      let stackeach = [];
+      let statseach = [];
+      let buffer0 = [];
+      let buffer1 = [];
+      let buffer2 = [];
+      let koudouzu = [];
+      for (k = 0; k < 8; k+=2) {
+
+        stackeach=[];
+        statseach=[];
+
+        koudouzu = koudouzu.concat([this.getByIndexes(this.DCdata,k/2,0)])
+
+        buffer0 = this.getByIndexes(this.DCdata,k/2,1)
+        buffer1 = this.getColumn(this.countConsecutive(buffer0),0);
+        buffer2 = this.getColumn(this.countConsecutive(buffer0),1);
+
+        len = buffer1.length
+
+        for (i = 0; i < 8; i++) {
+          let row1 = [];
+          for (j = 0; j < len; j++) {
+              row1.push(0);
+          }
+          stackeach.push(row1);
+        }
+
+        len = buffer2.length
+
+        for (i = 0; i < 8; i++) {
+          let row2 = [];
+          for (j = 0; j < len; j++) {
+              row2.push(0);
+          }
+          statseach.push(row2);
+        }
+        
+
+        stackeach[k]=[...buffer1]
+        statseach[k]=[...buffer2]
+        // console.log(k,"stackeach",stackeach)
+
+        stack=stack.concat(stackeach)
+        stats=stats.concat(statseach)
+
+        stackeach=[];
+        statseach=[];
+
+        buffer0 = this.getByIndexes(this.DCdata,k/2,2)
+        buffer1 = this.getColumn(this.countConsecutive(buffer0),0);
+        buffer2 = this.getColumn(this.countConsecutive(buffer0),1);
+        
+        len = buffer1.length
+
+        for (i = 0; i < 8; i++) {
+          let row1 = [];
+          for (j = 0; j < len; j++) {
+              row1.push(0);
+          }
+          stackeach.push(row1);
+        }
+
+        len = buffer2.length
+
+        for (i = 0; i < 8; i++) {
+          let row2 = [];
+          for (j = 0; j < len; j++) {
+              row2.push(0);
+          }
+          statseach.push(row2);
+        }
+
+        
+
+        stackeach[k+1]=[...buffer1]
+        statseach[k+1]=[...buffer2]
+        // console.log(k,"stackeach",stackeach)
+
+        stack=stack.concat(stackeach)
+        stats=stats.concat(statseach)
+        
+      }
+      console.log("行动图",koudouzu)
+      // 行动图处理
+
+      let koudousen = [];
+      let ele = 0
+      for (i=0;i<koudouzu[0].length;i++) {
+        for (j=0;j<koudouzu.length;j++) {
+          if (koudouzu[j][i] == 1) {
+            ele = j;
+            break;
+          }
+          
+        }
+        koudousen.push([i+0.5,ele]) // i+0.5纯为视觉效果
+      }
+
+      console.log("行动线",koudousen)
+      this.DCxaxis = koudousen
+
+
+      // for (k = 0; k < 4; k++) {
+      //   stackeach=[];
+      //   statseach=[];
+      //   buffer0 = this.getByIndexes(this.DCdata,k,1)
+      //   buffer1 = this.getColumn(this.countConsecutive(buffer0),0);
+      //   buffer2 = this.getColumn(this.countConsecutive(buffer0),1);
+      //   len = buffer1.length
+      //   // 初始化
+      //   for (i = 0; i < 4; i++) {
+      //     let row1 = [];
+      //     for (j = 0; j < len; j++) {
+      //         row1.push(0);
+      //     }
+      //     stackeach.push(row1);
+      //   }
+      //   // // console.log("check",stackeach)
+      //   len = buffer2.length
+      //   for (i = 0; i < 4; i++) {
+      //     let row2 = [];
+      //     for (j = 0; j < len; j++) {
+      //         row2.push(0);
+      //     }
+      //     statseach.push(row2);
+      //   }
+      //   // // console.log("check",statseach)
+
+      //   stackeach[k]=[...buffer1]
+      //   statseach[k]=[...buffer2]
+      //   stack=stack.concat(stackeach)
+      //   stats=stats.concat(statseach)
+        
+      // }
+
+      // for (k = 0; k < 4; k++) {
+      //   stackeach=[];
+      //   statseach=[];
+      //   buffer0 = this.getByIndexes(this.DCdata,k,2)
+      //   buffer1 = this.getColumn(this.countConsecutive(buffer0),0);
+      //   buffer2 = this.getColumn(this.countConsecutive(buffer0),1);
+      //   len = buffer1.length
+      //   // 初始化
+      //   for (i = 0; i < 4; i++) {
+      //     let row1 = [];
+      //     for (j = 0; j < len; j++) {
+      //         row1.push(0);
+      //     }
+      //     stackeach.push(row1);
+      //   }
+      //   // // console.log("check",stackeach)
+      //   len = buffer2.length
+      //   for (i = 0; i < 4; i++) {
+      //     let row2 = [];
+      //     for (j = 0; j < len; j++) {
+      //         row2.push(0);
+      //     }
+      //     statseach.push(row2);
+      //   }
+      //   // // console.log("check",statseach)
+
+      //   stackeach[k]=[...buffer1]
+      //   statseach[k]=[...buffer2]
+      //   stack=stack.concat(stackeach)
+      //   stats=stats.concat(statseach)
+        
+      // }
+
+      // console.log("堆积图数组-q&e",stack)
+      // console.log("堆积图数组-q&e状态",stats)
+
+      // 分别转置
+      let data = [];
+      let statsTrans = [];
+      let databuffer = [];
+      let flag = [];
+      for (k=0;k<8;k++) {
+        databuffer = this.transposeArray(stack.slice(k*8, k*8+8))
+        // console.log(k,"databuffer",databuffer)
+        data=data.concat(databuffer);
+        statsTrans=statsTrans.concat(this.transposeArray(stats.slice(k*8, k*8+8)));
+      }
+      // console.log("转置数据",data)
+      console.log("转置状态",statsTrans)
+      flag = this.sumRows(statsTrans)
+      // console.log("flag",flag)
+
+      // 准备option的series系列
+      let localseries = [];
+      let localseriesbuf = {
+          name: '1',
+          type: 'bar',
+          barWidth: '20%',
+          stack: 'total',
+          label: {
+            show: false
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: [],
+          itemStyle: {
+            color: 'green',
+            opacity: 0.8,
+            borderWidth: 1
+          }
+      };
+      for (k=0;k<data.length;k++) {
+        localseriesbuf = {
+            name: '1',
+            type: 'bar',
+            barWidth: '20%',
+            stack: 'total',
+            label: {
+              show: false
+            },
+            emphasis: {
+              focus: 'series'
+            },
+            data: [],
+            itemStyle: {
+              color: 'green',
+              opacity: 0.5,
+              borderWidth: 1
+            }
+        };
+        localseriesbuf.data=data[k];
+        // // console.log(k,data[k])
+
+        localseriesbuf.type='bar';       
+        localseriesbuf.stack='total';        
+        // localseriesbuf.label.show=true;      
+        if(flag[k]==1){         
+           
+          if (k % 2 == 1 ) { // 偶数行是Q技能
+            localseriesbuf.itemStyle.color='red';
+            localseriesbuf.name='Q skill'
+          }
+          else if (k!== 0) { // E技能
+            localseriesbuf.itemStyle.color='yellow';
+            localseriesbuf.name='E skill'
+          }
+          else {
+            localseriesbuf.itemStyle.color='red';
+            localseriesbuf.name='Q skill'
+          }
+          
+        }
+        else {
+          localseriesbuf.name='idle'
+          localseriesbuf.itemStyle.color='grey';
+        }
+        // // console.log("localseriesbuf",localseriesbuf.data)
+        localseries=localseries.concat(localseriesbuf);
+      }
+
+      // 添加行动线 
+      localseriesbuf = {
+        name: 'Active Character ',
+        yAxisIndex: 1,
+        // symbolSize: 30,
+        symbol: 'rect', // 设置散点形状为长方形
+        symbolSize: [35, 40], // 设置长方形的长宽比
+        itemStyle: {
+          color: 'green',
+          opacity: 0.2,
+          borderColor: 'rgba(0, 0, 0, 0)'
+        },
+        type: 'scatter',
+        data: this.DCxaxis,
+      };
+      localseries=localseries.concat(localseriesbuf);
+
+      // console.log("localseries",localseries)
+      this.DCoption.series = [];  
+      this.DCoption.series = localseries;
+      // console.log("dcseries",this.DCoption.series)
+
+      // // console.log(this.TSoption.series[0].data[0].value,"radarval") // byd要加[0]
+
+      // { 语法参考
+      //   type: 'bar',
+      //   data: [4, 3, 2, 1, 0],
+      //   coordinateSystem: 'polar',
+      //   name: 'With Round Cap',
+      //   roundCap: true,
+      //   itemStyle: {
+      //     borderColor: 'green',
+      //     opacity: 0.8,
+      //     borderWidth: 1
+      //   }
+      // }
+
+
+
+
+
+    },
+
+    sumRows(array) {
+        let result = [];
+        for (let i = 0; i < array.length; i++) {
+            let sum = 0;
+            for (let j = 0; j < array[i].length; j++) {
+                sum += array[i][j];
+            }
+            result.push(sum);
+        }
+        return result;
+    },
+    
+    transposeArray(array) {
+        let transposedArray = [];
+        for (let i = 0; i < array[0].length; i++) {
+            let newRow = [];
+            for (let j = 0; j < array.length; j++) {
+                newRow.push(array[j][i]);
+            }
+            transposedArray.push(newRow);
+        }
+        return transposedArray;
+    },
+
+    getColumn(array, columnIndex) {
+        let column = [];
+        for (let i = 0; i < array.length; i++) {
+            column.push(array[i][columnIndex]);
+        }
+        return column;
+    },
+
+    getByIndexes(array, firstIndex, thirdIndex) {
+        let result = [];
+        for (let i = 0; i < array[firstIndex].length; i++) {
+            result.push(array[firstIndex][i][thirdIndex]);
+        }
+        return result;
+    },
+
+    countConsecutive(array) {
+        let counts = []; // 存放连续数字的个数
+        let count = 0; // 记录当前连续数字的个数
+        let num = 0;
+
+        // 遍历输入数组
+        for (let i = 0; i < array.length; i++) {
+            // 如果当前元素与前一个元素相同，计数加1
+            num = i > 0? array[i - 1]: array[i]
+            if (i > 0 && array[i] === array[i - 1]) {
+                count++;
+            } else {
+                // 如果当前元素与前一个元素不同，将之前的计数添加到 counts 数组中，并重新开始计数
+                if (count > 0) {
+                    
+                    counts.push([count,num]);
+                }
+                count = 1; // 重新开始计数
+            }
+        }
+
+        // 将最后一组连续数字的计数添加到 counts 数组中
+        if (count > 0) {
+            counts.push([count,num]);
+        }
+
+        return counts;
     },
 
     TeamScoreCalc() {  // 计算团队所有需要计算的项
@@ -300,13 +898,27 @@ export default {
       this.teamDEFscore();
       this.teamHPscore();
       this.teamCost();
-      console.log("当前团队值: [ATK, DEF, HP, PRD, COST]", this.teamScore)
-      console.log(this.getTS(),"getts")
+      this.DCcalc();
+      this.stackGen();
+      // console.log("当前团队值: [ATK, DEF, HP, PRD, COST]", this.teamScore)
+      // // console.log(this.getTS(),"getts")
       this.TSoption.series[0].data[0].value = this.teamScore;
-      console.log(this.TSoption.series[0].data[0].value,"radarval") // byd要加[0]
+      // console.log(this.TSoption.series[0].data[0].value,"radarval") // byd要加[0]
       this.TSchart = echarts.init(this.$refs.TeamScore);
       this.TSchart.setOption(this.TSoption);
-      console.log("图表更新")
+
+      let buf = 0;
+      for (let index = 0; index < this.selectedRoles.length; index++) {
+          buf = index*2;
+          this.DCoption.yAxis[0].data[7-buf] = this.characters[Number(this.selectedRoles[index])].name;
+          this.DCoption.yAxis[0].data[6-buf] = this.characters[Number(this.selectedRoles[index])].name;
+          this.DCoption.yAxis[2].data[index] = this.DCnamae[index]
+      }
+      // console.log(this.DCoption.yAxis[0].data);
+      this.DCchart = echarts.init(this.$refs.DamageCycle);
+      this.DCchart.setOption(this.DCoption);
+
+      // console.log("图表更新")
     },
 
 
@@ -327,21 +939,21 @@ export default {
       if (!isNaN(id)) { // 确保 id 是一个数字
         try {
           const numericId = Number(id) + 1;
-          // console.log(id)
+          // // console.log(id)
           // 当 id 为 0 时，直接使用 0.png，否则使用 id+1 的图片
           const imageName = numericId;
           // const imageName = numericId === 0 ? 0 : numericId + 1;
-          // console.log(`Rendering image for ID: ${id}, using image: ${imageName}.png`);
+          // // console.log(`Rendering image for ID: ${id}, using image: ${imageName}.png`);
           return require(`@/assets/genshinava/${imageName}.png`);
         } catch (e) {
           console.error(e);
           // 如果导入失败，返回默认头像图片的路径
-          console.log(`Fallback due to error for ID: ${id}`);
+          // console.log(`Fallback due to error for ID: ${id}`);
           return require('@/assets/genshinava/0.png'); // 选择一个作为默认头像的路径，可能需要根据你的项目调整
         }
       } else {
         // 对于无效的 id，返回默认头像
-        console.log(`Fallback due to invalid ID: ${id}`);
+        // console.log(`Fallback due to invalid ID: ${id}`);
         return require('@/assets/genshinava/0.png');
       }
     },
@@ -459,6 +1071,17 @@ export default {
 
                         tag1: character.tag1 !== 'NA' ? character.tag1 : null,
                         tag2: character.tag2 !== 'NA' ? character.tag2 : null,
+
+                        // DamageCycle
+                        /**
+                         * 伤害轴计算用
+                         */
+                         eskill_lst: character.eskill_lst !== 'NA' ? character.eskill_lst : null,
+                         eskill_cd: character.eskill_cd !== 'NA' ? character.eskill_cd : null,
+                         eskill_ave: character.eskill_ave !== 'NA' ? character.eskill_ave : null,
+                         qskill_lst: character.qskill_lst !== 'NA' ? character.qskill_lst : null,
+                         qskill_cd: character.qskill_cd !== 'NA' ? character.qskill_cd : null,
+                         qskill_ave: character.qskill_ave !== 'NA' ? character.qskill_ave : null,
                       },
                       releaseDate: character.release_date !== 'NA' ? character.release_date : null,
                       weaponType: character.weapon_type !== 'NA' ? character.weapon_type : null,
@@ -467,7 +1090,7 @@ export default {
                       // Add other properties as needed
                     };
                   });
-                  console.log(this.characters, 'Characters');
+                  // console.log(this.characters, 'Characters');
                   this.characters.pop()
                   this.currentlengh = this.characters.length;
                   resolve(); // 数据处理完成，解决Promise

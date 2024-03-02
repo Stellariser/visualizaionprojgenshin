@@ -78,7 +78,7 @@
         <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id" v-if="index !== 0">
           
           <!-- itemfilter -->
-          <el-card class="card">
+          <el-card class="card" style="height: 470px;">
             <el-row :span="16">
               <!-- 头像列 -->
               <el-col :span="8">
