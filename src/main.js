@@ -35,7 +35,7 @@ Vue.config.productionTip = false
 Vue.use(Element)
 // require('./mock')
 
-
+// console.log = function() {}
 
 new Vue({
   router,

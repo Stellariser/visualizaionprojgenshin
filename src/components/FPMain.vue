@@ -6,7 +6,7 @@
         <!-- <span>Genshin Teaming Assistant</span> -->
         <img src="../assets/GenSynergy_ba-style.png" alt="Genshin Teaming Assistant"> 
       </div>
-      <el-button type="info" @click="logout">Exit</el-button>
+      <!-- <el-button type="info" @click="logout">Exit</el-button> -->
     </el-header>
     <!--页面主体-->
     <el-container>

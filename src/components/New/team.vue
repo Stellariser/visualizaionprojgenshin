@@ -17,7 +17,11 @@
         <div ref="TeamScore" style="height:600px;width:100%;"></div>
       </el-col>
       <el-col :span="14">
-        <div ref="DamageCycle" style="height:600px;width:100%;"></div>
+        <div :key="refreshKey" ref="DamageCycle" style="height:600px;width:100%;"></div>
+        <div>
+          <!-- 操作按钮 -->
+          <el-button type="primary" @click="handleRefresh, TeamScoreCalc()" style="opacity: 0;">Refresh</el-button>
+        </div>
       </el-col>
     </el-row>
 
@@ -107,6 +111,7 @@ export default {
 
   data() {
     return {
+      refreshKey: 0,
       dialogVisible: false,
       currentRoleIndex: null,
       characters: [],
@@ -168,9 +173,11 @@ export default {
         ]
       },
 
+      damageValue: [],
       DCnamae: [],
       DCdata : [],
       DCxaxis: [],
+      DCyaxis: [0,75],
       DCchart: null,
       DCoption : {
         
@@ -198,19 +205,44 @@ export default {
           {
             type: 'category',
             show: false,
-            data: ['Member1', 'Member2', 'Member3', 'Member4', 'Member1', 'Member2', 'Member3', 'Member4']
+            data: ['Member1', 'Member2', 'Member3', 'Member4', 'Member1', 'Member2', 'Member3', 'Member4', 'Member3', 'Member4'],
+            axisLine: {
+                show: false // 隐藏 x 轴线
+            },
+            axisTick: {
+                show: false // 隐藏 x 轴刻度线
+            }
           },
           {
-            data: [1, 2, 3, 4],
+            data: [1, 2, 3, 4, 5],
             show: false,
           },
           {
             type: 'category',
-            data: ['Member1', 'Member2', 'Member3', 'Member4'],
+            data: ['Member1', 'Member2', 'Member3', 'Member4',''],
             position: 'left',
             axisLabel: {
                 margin: 20,
                 fontSize: 14 // 设置 Y 轴标签的字号为 14px
+            },
+            axisLine: {
+                show: false // 隐藏 x 轴线
+            },
+            axisTick: {
+                show: false // 隐藏 x 轴刻度线
+            }
+          },
+          { 
+            // data: [1, 2, 3, 4],
+            show: false, 
+            gridIndex: 0, 
+            min: 0, 
+            max: 100,
+            axisLine: {
+                show: false // 隐藏 x 轴线
+            },
+            axisTick: {
+                show: false // 隐藏 x 轴刻度线
             }
           },
         ],
@@ -239,6 +271,14 @@ export default {
     }
   },
   methods: {
+
+    handleRefresh() {
+      // 点击刷新按钮，改变 refreshKey 的值触发组件的重新渲染
+      // this.refreshKey++
+      if (module.hot) {
+        module.hot.accept(); // 手动触发模块热替换
+      }
+    },
 
     getTS() {
       return this.teamScore;
@@ -345,6 +385,18 @@ export default {
       // console.log("团队cost: ",score)
     },
 
+    DamageCalc() {
+
+      // console.log("行动矩阵", this.DCdata)
+      
+  
+
+
+      
+
+
+
+    },
     DCcalc() {
 
       let [i,j,k] = [0,0,0];
@@ -497,6 +549,80 @@ export default {
         // // console.log("行动矩阵", koudou)
         this.DCdata=koudou;
         // console.log("行动矩阵", this.DCdata)
+        // console.log("行动矩阵长度", this.DCdata[0].length)
+      let localDamage = [];
+      let maxele = 0;
+      const yoffset = 80;
+
+      for (let i = 0; i < this.DCdata[0].length; i++) {
+        // initialize
+        let tag = '';
+        let localele = 0;
+        let buffer = 0;
+        let pluszone = 1;   // 平A
+        let mtpyzone = 1;
+        let yoffset = 0;
+        let plusamp = 1.01; // 为了显示效果开的倍率
+        let mtpyamp = 1.5;
+
+        for (let j = 0; j < this.DCdata.length; j++) {
+
+          buffer = this.characters.findIndex(item => item.name === this.DCnamae[j]);
+          tag = this.characters[buffer].stats.tag1;
+          // console.log(tag);
+
+          if (tag == "Damage_Dealer" || tag == "Vice_DamageDealer"){
+            pluszone += this.characters[buffer].stats.qskill_ave * this.DCdata[j][i][1] * plusamp; // q技能伤害
+            pluszone += this.characters[buffer].stats.eskill_ave * this.DCdata[j][i][2] * plusamp; // q技能伤害
+          }
+          // localele = this.characters[buffer].stats.
+
+        }
+
+        for (let j = 0; j < this.DCdata.length; j++) {
+
+          buffer = this.characters.findIndex(item => item.name === this.DCnamae[j]);
+          tag = this.characters[buffer].stats.tag1;
+          // console.log(tag);
+
+          if (tag == "Support" || tag == "Vice_DamageDealer"){
+            if (this.DCdata[j][i][1] == 1) {
+              mtpyzone *= this.characters[buffer].stats.coef_atkspt * mtpyamp;       // q技能增幅
+            }
+            if (this.DCdata[j][i][2] == 1) {
+              mtpyzone *= this.characters[buffer].stats.coef_atkspt * 0.6 * mtpyamp; // e技能增幅
+            }
+          }
+          // localele = this.characters[buffer].stats.
+
+        }
+
+        // 找最大元素
+        localele = mtpyzone * pluszone;
+        maxele = localele > maxele ? localele : maxele;
+        // console.log("伤害值",yoffset)
+
+        localDamage.push(localele);
+          
+
+
+      }
+      
+
+
+      // 制作伤害曲线数据
+      let damageData = [];
+      let buffer114514 = 0;
+      for (i=0;i<localDamage.length;i++) {
+        buffer114514 = localDamage[i] * yoffset / 4 / maxele + yoffset
+        damageData.push([i+0.5,buffer114514])
+
+      }
+
+      this.damageValue = damageData;
+      // console.log("伤害值",localDamage)
+
+      console.log("伤害值",this.damageValue)
     },
 
     getMin(a, b) {
@@ -606,7 +732,7 @@ export default {
         stats=stats.concat(statseach)
         
       }
-      console.log("行动图",koudouzu)
+      // console.log("行动图",koudouzu)
       // 行动图处理
 
       let koudousen = [];
@@ -622,7 +748,7 @@ export default {
         koudousen.push([i+0.5,ele]) // i+0.5纯为视觉效果
       }
 
-      console.log("行动线",koudousen)
+      // console.log("行动线",koudousen)
       this.DCxaxis = koudousen
 
 
@@ -707,7 +833,7 @@ export default {
         statsTrans=statsTrans.concat(this.transposeArray(stats.slice(k*8, k*8+8)));
       }
       // console.log("转置数据",data)
-      console.log("转置状态",statsTrans)
+      // console.log("转置状态",statsTrans)
       flag = this.sumRows(statsTrans)
       // console.log("flag",flag)
 
@@ -780,25 +906,75 @@ export default {
         localseries=localseries.concat(localseriesbuf);
       }
 
-      // 添加行动线 
+      // 添加行动点
+      // localseriesbuf = {
+      //   name: 'Active Character',
+      //   yAxisIndex: 1,
+      //   // symbolSize: 30,
+      //   symbol: 'rect', // 设置散点形状为长方形
+      //   symbolSize: [35, 40], // 设置长方形的长宽比
+      //   itemStyle: {
+      //     color: 'green',
+      //     opacity: 0.2,
+      //     borderColor: 'rgba(0, 0, 0, 0)'
+      //   },
+      //   type: 'scatter',
+      //   data: this.DCxaxis,
+      // };
+      // localseries=localseries.concat(localseriesbuf);
+
+      // 添加行动线
       localseriesbuf = {
         name: 'Active Character ',
         yAxisIndex: 1,
-        // symbolSize: 30,
+        symbolSize: 30,
         symbol: 'rect', // 设置散点形状为长方形
-        symbolSize: [35, 40], // 设置长方形的长宽比
+        symbolSize: [33, 40], // 设置长方形的长宽比
         itemStyle: {
           color: 'green',
           opacity: 0.2,
           borderColor: 'rgba(0, 0, 0, 0)'
         },
-        type: 'scatter',
+        tooltip:{
+          show: false,
+        },
+        type: 'line',
         data: this.DCxaxis,
+        edgeSymbol: ['circle', 'arrow'],
+        markLine: {
+          // data: this.DCxaxis,
+        }
+      };
+      localseries=localseries.concat(localseriesbuf);
+
+      // 添加伤害线
+      localseriesbuf = {
+        name: 'Damage',
+        yAxisIndex: 3,
+        // symbolSize: 30,
+        // symbol: 'rect', // 设置散点形状为长方形
+        // symbolSize: [33, 40], // 设置长方形的长宽比
+        // itemStyle: {
+        //   color: 'green',
+        //   opacity: 0.2,
+        //   borderColor: 'rgba(0, 0, 0, 0)'
+        // },
+        tooltip:{
+          show: false,
+        },
+        type: 'line',
+        data: this.damageValue,
+        showSymbol: false,
+        // edgeSymbol: ['circle', 'arrow'],
+        markLine: {
+          // data: this.DCxaxis,
+        },
+        smooth: true // 将 smooth 设置为 true 实现平滑线
       };
       localseries=localseries.concat(localseriesbuf);
 
       // console.log("localseries",localseries)
-      this.DCoption.series = [];  
+      this.DCoption.series = null; 
       this.DCoption.series = localseries;
       // console.log("dcseries",this.DCoption.series)
 
@@ -900,6 +1076,7 @@ export default {
       this.teamCost();
       this.DCcalc();
       this.stackGen();
+      this.DamageCalc();
       // console.log("当前团队值: [ATK, DEF, HP, PRD, COST]", this.teamScore)
       // // console.log(this.getTS(),"getts")
       this.TSoption.series[0].data[0].value = this.teamScore;
