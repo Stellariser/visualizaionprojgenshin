@@ -27,9 +27,19 @@
 
 
     <el-dialog :visible.sync="dialogVisible" width="60%">
+
+      <el-select v-model="selectedRoleType" placeholder="Choose character type">
+        <el-option label="All" value="All"></el-option>
+        <el-option label="Damage Dealer" value="Damage_Dealer"></el-option>
+        <el-option label="Vice Damage Dealer" value="Vice_DamageDealer"></el-option>
+        <el-option label="Support" value="Support"></el-option>
+        <el-option label="Healer" value="Healer"></el-option>
+      </el-select>
+
       <div class="card-container" ref="scrollContainer">
         <el-row :gutter="20">
-          <el-col :span="6" v-for="(character, index) in characters" :key="character.id" v-if="index !== 0">
+          <el-col :span="6" v-for="(character, index) in filteredCharacters" :key="character.id" v-if="index !== 0">
+          <!--<el-col :span="6" v-for="(character, index) in characters" :key="character.id" v-if="index !== 0">-->
             <el-card class="card">
               <div>
                 <!-- 角色头像 -->
@@ -90,11 +100,54 @@ export default {
 
   computed: {
     // 从 Vuex 获取 selectedRoles 数组
+      filteredCharacters() {
+    
+    if (!this.selectedRoleType) return this.characters; // 如果没有选择类型，则返回所有角色
+    return this.characters.filter(character => {
+      // 将选中的角色类型映射到实际的tag值
+      let tagValue;
+      switch (this.selectedRoleType) {
+        case 'Vice_DamageDealer':
+          tagValue = 'Vice_DamageDealer';
+          break;
+        case 'Support':
+          tagValue = 'Support';
+          break;
+        case 'Damage_Dealer':
+          tagValue = 'Damage_Dealer';
+          break;
+        case 'Healer':
+          tagValue = 'Healer';
+          break;
+        case 'All':
+          return true;
+        default:
+          return false;
+
+          //return false; // 如果selectedRoleType不匹配任何已知类型，则不包括该角色
+      }
+    return character.stats.tag1 === tagValue||character.stats.tag2 === tagValue|| 
+             character.stats.tag1 === 'All';
+
+    });
+    /*
+    if(this.selectedRoleType!=null&&this.selectedRoleType!='All')
+    result.unshift(null);
+
+    return result;
+*/
+    },
+
     selectedRoles() {
       return this.$store.state.selectedRoles;
     },
+    /*
+    filteredCharacters() {
+      return this.characters.filter(character =>
+        (character.tag1 === 'Vice_DamageDealer' || character.tag2 === 'Vice_DamageDealer') && character.id !== 0);
+    }
 
-
+*/
 
   },
 
@@ -109,6 +162,8 @@ export default {
     return {
       dialogVisible: false,
       currentRoleIndex: null,
+      selectedRoleType: 'All', // 存储选中的角色类型
+
       characters: [],
       /**
        * 队伍分数，供队伍能力可视化使用
