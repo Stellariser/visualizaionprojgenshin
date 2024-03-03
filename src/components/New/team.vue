@@ -164,6 +164,7 @@ export default {
       dialogVisible: false,
       currentRoleIndex: null,
       selectedRoleType: 'All', // 存储选中的角色类型
+
       characters: [],
       /**
        * 队伍分数，供队伍能力可视化使用
