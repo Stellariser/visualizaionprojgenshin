@@ -947,7 +947,7 @@ methods: {
  
       else {
           localseriesbuf.itemStyle.color='red';
-          localseriesbuf.name='Q skill'
+          localseriesbuf.name='Q skill active time'
       }
       
       }
