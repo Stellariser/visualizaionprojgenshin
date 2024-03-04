@@ -225,6 +225,7 @@ return {
   },
 
   damageValue: [],
+  baseDamageValue: [],
   DCnamae: [],
   DCdata : [],
   DCxaxis: [],
@@ -664,14 +665,17 @@ methods: {
 
   // 制作伤害曲线数据
   let damageData = [];
+  let baseDamage = [];
   let buffer114514 = 0;
   for (i=0;i<localDamage.length;i++) {
       buffer114514 = localDamage[i] * yoffset / 4 / maxele + yoffset
       damageData.push([i+0.5,buffer114514])
+      baseDamage.push([i+0.5,yoffset / 4 / maxele + yoffset])
 
   }
 
   this.damageValue = damageData;
+  this.baseDamageValue = baseDamage;
   // console.log("伤害值",localDamage)
 
   console.log("伤害值",this.damageValue)
@@ -1021,6 +1025,33 @@ methods: {
       // edgeSymbol: ['circle', 'arrow'],
       markLine: {
       // data: this.DCxaxis,
+      },
+      smooth: true // 将 smooth 设置为 true 实现平滑线
+  };
+  localseries=localseries.concat(localseriesbuf);
+
+    // 添加基础伤害线
+  localseriesbuf = {
+      name: 'Base Damage',
+      yAxisIndex: 3,
+      // symbolSize: 30,
+      // symbol: 'rect', // 设置散点形状为长方形
+      // symbolSize: [33, 40], // 设置长方形的长宽比
+      // itemStyle: {
+      //   color: 'green',
+      //   opacity: 0.2,
+      //   borderColor: 'rgba(0, 0, 0, 0)'
+      // },
+      tooltip:{
+      show: false,
+      },
+      type: 'line',
+      data: this.baseDamageValue,
+      showSymbol: false,
+      // edgeSymbol: ['circle', 'arrow'],
+      lineStyle: {
+            type: 'dashed', // 设置为虚线
+            // color: 'red'    // 设置虚线的颜色
       },
       smooth: true // 将 smooth 设置为 true 实现平滑线
   };
