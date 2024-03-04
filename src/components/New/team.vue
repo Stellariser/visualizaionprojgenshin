@@ -251,8 +251,13 @@ return {
       xAxis: {
       type: 'value',
       data: {
-          value : Array.from({ length: 10 }, (value, index) => index + 1)
-      }
+        //   value : Array.from({ length: 10 }, (value, index) => index + 1),
+
+      },
+      min:0,
+      max:19,
+      name: 'time [s]',
+      splitNumber: 19
       },
       yAxis: [ 
       {
@@ -874,8 +879,8 @@ methods: {
       
   // }
 
-  // console.log("堆积图数组-q&e",stack)
-  // console.log("堆积图数组-q&e状态",stats)
+  console.log("堆积图数组-q&e",stack)
+  console.log("堆积图数组-q&e状态",stats)
 
   // 分别转置
   let data = [];
@@ -888,10 +893,10 @@ methods: {
       data=data.concat(databuffer);
       statsTrans=statsTrans.concat(this.transposeArray(stats.slice(k*8, k*8+8)));
   }
-  // console.log("转置数据",data)
-  // console.log("转置状态",statsTrans)
+//   console.log("转置数据",data.length)
+  console.log("转置状态",statsTrans)
   flag = this.sumRows(statsTrans)
-  // console.log("flag",flag)
+//   console.log("flag",flag)
 
   // 准备option的series系列
   let localseries = [];
@@ -941,15 +946,17 @@ methods: {
       if(flag[k]==1){         
           
       if (k % 2 == 1 ) { // 偶数行是Q技能
+
           localseriesbuf.itemStyle.color='red';
           localseriesbuf.name='Q skill active time'
+
       }
       else if (k!== 0) { // E技能
           localseriesbuf.itemStyle.color='yellow';
           localseriesbuf.name='E skill active time'
       }
  
-      else {
+      else if (k==0) {
           localseriesbuf.itemStyle.color='red';
           localseriesbuf.name='Q skill active time'
       }
