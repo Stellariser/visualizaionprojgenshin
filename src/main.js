@@ -6,6 +6,8 @@ import Element from 'element-ui'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/global.css'
+import './assets/fonts/index.css' //原神字体
+import './assets/globalfont.css' //原神字体
 import Vuex from 'vuex';
 //引入 echarts
 import echarts from 'echarts'

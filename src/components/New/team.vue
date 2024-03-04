@@ -238,6 +238,7 @@ return {
       //   // Use axis to trigger tooltip
       //   type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
       // }
+      
       },
       legend: {},
       grid: {
@@ -270,7 +271,7 @@ return {
       },
       {
           type: 'category',
-          data: ['Member1', 'Member2', 'Member3', 'Member4',''],
+          data: ['Member1', 'Member2', 'Member3', 'Member4','= Damage Curve ='],
           position: 'left',
           axisLabel: {
               margin: 20,
@@ -534,8 +535,8 @@ methods: {
       }
 
       for (j = 0; j < 4; j++) {
-          buffer = this.characters.findIndex(item => item.name === cdpri_s[j][0]);
-          // // // console.log(cdpri_s[j][0],this.characters[buffer].name)
+          buffer = this.characters.findIndex(item => item.name === this.DCnamae[j]);
+          // // // console.log(this.DCnamae[j],this.characters[buffer].name)
           if(cdpri_s[j][1] == 0) {    // q技能
           // // console.log(this.characters[buffer].name,"，Q技能持续时间为",Number(this.characters[buffer].stats.qskill_lst))
           maxturn = this.getMin(Number(this.characters[buffer].stats.qskill_lst),20-i-1)
@@ -783,7 +784,7 @@ methods: {
       stats=stats.concat(statseach)
       
   }
-  // console.log("行动图",koudouzu)
+//   console.log("行动图",koudouzu)
   // 行动图处理
 
   let koudousen = [];
@@ -937,12 +938,13 @@ methods: {
           
       if (k % 2 == 1 ) { // 偶数行是Q技能
           localseriesbuf.itemStyle.color='red';
-          localseriesbuf.name='Q skill'
+          localseriesbuf.name='Q skill active time'
       }
       else if (k!== 0) { // E技能
           localseriesbuf.itemStyle.color='yellow';
-          localseriesbuf.name='E skill'
+          localseriesbuf.name='E skill active time'
       }
+ 
       else {
           localseriesbuf.itemStyle.color='red';
           localseriesbuf.name='Q skill'
@@ -950,7 +952,7 @@ methods: {
       
       }
       else {
-      localseriesbuf.name='idle'
+      localseriesbuf.name='idle/normal-atk time'
       localseriesbuf.itemStyle.color='grey';
       }
       // // console.log("localseriesbuf",localseriesbuf.data)
@@ -1141,8 +1143,8 @@ methods: {
   let buf = 0;
   for (let index = 0; index < this.selectedRoles.length; index++) {
       buf = index*2;
-      this.DCoption.yAxis[0].data[7-buf] = this.characters[Number(this.selectedRoles[index])].name;
-      this.DCoption.yAxis[0].data[6-buf] = this.characters[Number(this.selectedRoles[index])].name;
+      this.DCoption.yAxis[0].data[buf] = this.DCnamae[index] + ':'
+      this.DCoption.yAxis[0].data[buf+1] = this.DCnamae[index]  + ':'
       this.DCoption.yAxis[2].data[index] = this.DCnamae[index]
   }
   // console.log(this.DCoption.yAxis[0].data);

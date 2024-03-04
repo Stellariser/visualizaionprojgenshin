@@ -35,6 +35,7 @@ export default {
 </script>
 
 <style scoped>
+
 canvas{
   background: rgb(226, 106, 225);
   opacity: 100%;

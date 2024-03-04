@@ -439,47 +439,47 @@ export default {
         legend: {
 
         },
-        // radar: [
-        //   {
-        //     // 第一个雷达图的配置
-        //     indicator: [
-        //       {name: 'ATK', max: 500},
-        //       {name: 'DEF', max: 1000},
-        //       {name: 'HP', max: 20000},
-        //       {name: 'Energy Recharge', max: 1.5},
-        //       {name: 'Elemental Mastery', max: 100},
-        //       {name: 'Healing Bonus', max: 0.3},
-        //       {name: 'Shield', max: 50},
-        //       {name: 'Ancillary', max: 50},
-        //     ],
-        //     center: ['50%', '50%'], // 根据需要调整位置
-        //     radius: 120,
-        //     splitNumber: 4,
-        //     shape: 'circle',
-        //     startAngle: 90,
-        //     axisName: {
-        //       formatter: '【{value}】',
-        //       color: '#000000'
-        //     },
-        //     splitArea: {
-        //       areaStyle: {
-        //         color: ['#8ee5db', '#5ddbd8', '#7ab1e7', '#aec7ea'],
-        //         shadowColor: 'rgba(0, 0, 0, 0.2)',
-        //         shadowBlur: 10
-        //       }
-        //     },
-        //     axisLine: {
-        //       lineStyle: {
-        //         color: 'rgba(211, 253, 250, 0.8)'
-        //       }
-        //     },
-        //     splitLine: {
-        //       lineStyle: {
-        //         color: 'rgba(211, 253, 250, 0.8)'
-        //       }
-        //     }
-        //   }
-        // ],
+        radar: [
+          {
+            // 第一个雷达图的配置
+            indicator: [
+              {name: 'ATK', max: 500},
+              {name: 'DEF', max: 1000},
+              {name: 'HP', max: 20000},
+              {name: 'Energy Recharge', max: 1.5},
+              {name: 'Elemental Mastery', max: 100},
+              {name: 'Healing Bonus', max: 0.3},
+              {name: 'Shield', max: 50},
+              {name: 'Ancillary', max: 50},
+            ],
+            center: ['50%', '50%'], // 根据需要调整位置
+            radius: 120,
+            splitNumber: 4,
+            shape: 'circle',
+            startAngle: 90,
+            axisName: {
+              formatter: '【{value}】',
+              color: '#000000'
+            },
+            splitArea: {
+              areaStyle: {
+                color: ['#8ee5db', '#5ddbd8', '#7ab1e7', '#aec7ea'],
+                shadowColor: 'rgba(0, 0, 0, 0.2)',
+                shadowBlur: 10
+              }
+            },
+            axisLine: {
+              lineStyle: {
+                color: 'rgba(211, 253, 250, 0.8)'
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: 'rgba(211, 253, 250, 0.8)'
+              }
+            }
+          }
+        ],
         series: [
           {
             name: 'rate',
@@ -644,7 +644,7 @@ export default {
             'atk_90_90',
             ];
           console.log(this.dialogid,"zhunbeikaishicha");
-          const characterStats = this.characters[Number(this.dialogid)].stats;
+          const characterStats = this.characters[Number(this.dialogid+1)].stats;
           console.log(characterStats,"chahaole");
 
           for (let prop in characterStats){
