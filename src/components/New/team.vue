@@ -7,7 +7,7 @@
             <span :class="RoleType(roleId)">{{ RoleInTeam(roleId) }}</span>
             <!-- <span> roleId </span> -->
           </div>
-          <div @click="openDialog(index)" style="text-align: center;">
+          <div @click="openDialog(index)" style="text-align: center;"> 
             <img :src="getAvatarSrc(Number(roleId)-1)" alt="角色头像" style="height: 200px; width: auto;">
           </div>
           <!-- <el-button type="primary" @click="openDialog(index)" style="margin-top: 5px">详情</el-button> -->
@@ -86,9 +86,9 @@ mounted() {
       // console.log('在动吗')
 
       this.TSchart = echarts.init(this.$refs.TeamScore);
-      this.TSchart.setOption(this.TSoption);
+      this.TSchart.setOption(this.TSoption,true);
       this.DCchart = echarts.init(this.$refs.DamageCycle);
-      this.DCchart.setOption(this.DCoption);
+      this.DCchart.setOption(this.DCoption,true);
       // this.getTS();
 
   });
@@ -1133,7 +1133,10 @@ methods: {
   this.TSoption.series[0].data[0].value = this.teamScore;
   // console.log(this.TSoption.series[0].data[0].value,"radarval") // byd要加[0]
   this.TSchart = echarts.init(this.$refs.TeamScore);
-  this.TSchart.setOption(this.TSoption);
+  
+  this.TSchart.setOption(this.TSoption,true);
+  this.TSchart.clear();
+  this.TSchart.setOption(this.TSoption,true);
 
   let buf = 0;
   for (let index = 0; index < this.selectedRoles.length; index++) {
@@ -1144,7 +1147,11 @@ methods: {
   }
   // console.log(this.DCoption.yAxis[0].data);
   this.DCchart = echarts.init(this.$refs.DamageCycle);
-  this.DCchart.setOption(this.DCoption);
+
+  this.DCchart.setOption(this.DCoption,true);
+  this.DCchart.clear();
+  this.DCchart.setOption(this.DCoption,true);
+
 
   // console.log("图表更新")
   },
