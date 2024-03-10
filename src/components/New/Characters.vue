@@ -381,14 +381,16 @@ export default {
             labelLine: {
               show: false
             },
+            color: ['#FFC0CB', '#FFD700', '#6A5ACD', '#40E0D0', '#FFA07A', '#D2691E', '#C0C0C0']
+            ,
             data: [
-              { value: 1048, name: 'Special0' },
-              { value: 735, name: 'Special1' },
-              { value: 580, name: 'Special2' },
-              { value: 484, name: 'Special3' },
-              { value: 300, name: 'Special4' },
-              { value: 484, name: 'Special5' },
-              { value: 300, name: 'Special6' }
+              { value: 1048, name: 'Special0' , itemStyle: { color: '#FF6384' }},
+              { value: 735, name: 'Special1' , itemStyle: { color: '#FF6384' }},
+              { value: 580, name: 'Special2' , itemStyle: { color: '#FF6384' }},
+              { value: 484, name: 'Special3' , itemStyle: { color: '#FF6384' }},
+              { value: 300, name: 'Special4' , itemStyle: { color: '#FF6384' }},
+              { value: 484, name: 'Special5' , itemStyle: { color: '#FF6384' }},
+              { value: 300, name: 'Special6', itemStyle: { color: '#FF6384' } }
             ]
           }
         ]
