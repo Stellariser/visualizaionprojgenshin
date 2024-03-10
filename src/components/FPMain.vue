@@ -35,10 +35,6 @@
             <i class="el-icon-s-data"></i>
             <span slot="title">Team</span>
           </el-menu-item>
-          <el-menu-item index="/homework">
-            <i class="el-icon-s-data"></i>
-            <span slot="title">Test</span>
-          </el-menu-item>
           <div class="avatars-container">
             <!-- 遍历selectedRoles数组，为每个角色渲染一个头像 -->
             <vs-avatar v-for="(roleId, index) in $store.state.selectedRoles" :key="index" square class="vsavatar" @click="removeRole(index)" >

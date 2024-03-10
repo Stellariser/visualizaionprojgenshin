@@ -16,10 +16,8 @@ import postDetail from "@/components/postdetail";
 import myPostList from "@/components/myPostList";
 import postCollection from "@/components/postCollection"
 import notificationBoard from "@/components/notificationBoard";
-import aaaaaaaaaa from "@/components/aaaaaaaaaa";
 import FPMain from "@/components/FPMain";
 import Characters from "@/components/New/Characters";
-import test from "@/components/New/test";
 import RecommendTeams from '@/components/New/RecommendTeams'
 import team from '@/components/New/team'
 Vue.use(VueRouter)
@@ -41,7 +39,6 @@ const routes = [
         path: '/home',
         component: FPMain,
         children: [
-            { path: '/homework', component: aaaaaaaaaa },
             {
                 path: '/recommend-teams',
                 name: 'Recommendteams',
@@ -51,7 +48,6 @@ const routes = [
             { path: '/team', component: team },
             { path: '/welcome', component: FPMain },
             { path: '/home/', component: Characters},
-            { path: '/test/', component: test},
             { path: '/home/createPost', component: createPost},
             { path: '/home/myInfo', component: mePage},
             { path: '/home/myPost', component: myPostList},
