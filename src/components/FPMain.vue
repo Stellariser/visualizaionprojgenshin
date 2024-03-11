@@ -1,25 +1,29 @@
 <template>
   <el-container class="home-cointainer">
     <!--头部区域-->
-    <el-header>
-      <div>
+    <!-- <el-header style="background-color: #9acbf2;"> -->
+      <!-- <div> -->
         <!-- <span>Genshin Teaming Assistant</span> -->
-        <img src="../assets/GenSynergy_ba-style.png" alt="Genshin Teaming Assistant"> 
-      </div>
-      <el-button type="info" @click="logout">Exit</el-button>
-    </el-header>
+        <!-- <img src="../assets/GenSynergy_ba-style.png" alt="Genshin Teaming Assistant">  -->
+      <!-- </div> -->
+      <!-- <el-button type="info" @click="logout">Exit</el-button>   -->
+    <!-- </el-header> -->
     <!--页面主体-->
     <el-container>
       <!--侧边栏-->
-      <el-aside width="250px">
+      <el-aside width="250px" style="background-color: #a9d7fa;">
+        <div>
+        <!-- <span>Genshin Teaming Assistant</span> -->
+        <img src="../assets/GenSynergy_ba-style.png" alt="Genshin Teaming Assistant"> 
+      </div>
         <!--侧边栏菜单区域-->
         <el-menu
             default-active="2"
             class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
-            background-color="#10173f"
-            text-color="#fff"
+            background-color="#a9d7fa"
+            text-color="#ebebeb"
             active-text-color="#409EFF"
             router>
           <!--一级菜单1-->
@@ -204,8 +208,11 @@ export default {
 .el-aside{
   background-color: #091534;
 }
+.el-aside::-webkit-scrollbar {
+    display: none; /* 隐藏滚动条 */
+}
 .el-main{
-  background-color: #e6e6e6;
+  background-color: #e3f3fa;
 }
 .home-cointainer{
   height: 100%

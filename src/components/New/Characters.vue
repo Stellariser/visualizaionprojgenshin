@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="background-color: #e3f3fa;">
    <el-header>
     <el-select v-model="selectedSort" placeholder="请选择排序方式" @change="sortCharacters">
       <el-option label="ordered by ID" value=""></el-option>
@@ -21,12 +21,14 @@
         <el-col :span="6">
           <!-- 头像位置 -->
           <div style="text-align:center;">
-            <vs-avatar square class="vsavatar" badge writing badge-color="success">
+            <!-- <vs-avatar square class="vsavatar" badge writing badge-color="success"> -->
+            <vs-avatar square class="vsavatar">
               <img :src="avatarSrc" class="avatar" alt="avatar">
             </vs-avatar>
           </div>
           <div style="text-align:center;">
-            <vs-avatar square class="vsavatar2" badge writing badge-color="success">
+            <!-- <vs-avatar square class="vsavatar2" badge writing badge-color="success"> -->
+            <vs-avatar square class="vsavatar2">
               <img :src="armSrc" class="avatar" alt="avatar">
             </vs-avatar>
           </div>
@@ -73,29 +75,40 @@
   </span>
     </el-dialog>
     <div class="card-container" ref="scrollContainer">
-      <el-row :gutter="40">
+      <el-row :gutter="40" style="margin-left: 0px; margin-right: 0px;">
         <!-- 循环生成30个卡片 -->
         <el-col :span="12" v-for="(character, index) in this.rendercharacter.slice(0,this.rendercharacter.length-1)" :key="character.id" v-if="index !== 0">
           
           <!-- itemfilter -->
-          <el-card class="card" style="height: 470px;">
+          <el-card class="card" style="height: 400px; aspect-ratio: 16 / 10;">
             <el-row :span="16">
               <!-- 头像列 -->
               <el-col :span="8">
+                <el-row>
 <!--                <img :src="require('@/assets/avatar/ganyu.jpg')" class="avatar" alt="avatar">-->
-                <vs-avatar square class="vsavatar" badge writing badge-color="success">
-                  <img :src="getAvatarSrc(character.id)" class="avatar" alt="avatar">
+                <!-- <vs-avatar square class="vsavatar" badge writing badge-color="success"> -->
+                <vs-avatar square class="vsavatar">
+                  <img :src="getAvatarSrc(character.id)" class="avatar" alt="avatar" @click="handleButtonClick2(character.id)">
                 </vs-avatar>
+                <el-row style="height: 40px;" :span="8">
+                <el-tag style="text-align: left;" type="success">{{ character.tag1 }}</el-tag>
+              </el-row>
+              <el-row style="height: 40px;" :span="8">
+                <p v-if="character.tag2.length > 0">              
+                  <el-tag style="text-align: left;" type="info">{{ character.tag2 }}</el-tag>
+                </p>
+              </el-row>
+              </el-row>
               </el-col>
               <!-- 条状图列 -->
               <el-col :span="16"><div class="grid-content bg-purple-dark">
-                <div ref="radar" :id="'radar-' + index" style="height:300px;width:100%;"></div>
+                <div @click="handleButtonClick(character.id)" ref="radar" :id="'radar-' + index" style="height:300px;width:100%;"></div>
               </div></el-col>
 
 
             </el-row>
-            <el-row :span="4">
-              <el-col :span="4" class="bot">
+            <!-- <el-row :span="4"> -->
+              <!-- <el-col :span="4" class="bot">
                 <vs-button
                     gradient
                     :active="active == 1"
@@ -103,22 +116,15 @@
                 >
                   Detail
                 </vs-button>
-              </el-col>
-              <el-col :span="4" class="bot">
-                <vs-button gradient :active="active == 1" @click="handleButtonClick2(character.id)">
+              </el-col> -->
+              <!-- <el-col :span="4" class="bot">
+                <!-- <vs-button gradient :active="active == 1" @click="handleButtonClick2(character.id)">
                   Add to Team
-                </vs-button>
-              </el-col>
-              <el-col :span="4">
-                <el-tag type="success">{{ character.tag1 }}</el-tag>
-              </el-col>
-              <p v-if="character.tag2.length > 0">
-                <el-col :span="4">
-                  <el-tag type="info">{{ character.tag2 }}</el-tag>
-                </el-col>
-              </p>
+                </vs-button> 
+              </el-col> -->
 
-            </el-row>
+
+            <!-- </el-row> -->
           </el-card>
         </el-col>
       </el-row>
@@ -451,8 +457,8 @@ export default {
               {name: 'Energy Recharge', max: 1.5},
               {name: 'Elemental Mastery', max: 100},
               {name: 'Healing Bonus', max: 0.3},
-              {name: 'Shield', max: 50},
-              {name: 'Ancillary', max: 50},
+              // {name: 'Shield', max: 50},
+              // {name: 'Ancillary', max: 50},
             ],
             center: ['50%', '50%'], // 根据需要调整位置
             radius: 120,
@@ -484,7 +490,7 @@ export default {
         ],
         series: [
           {
-            name: 'rate',
+            name: 'Character detail',
             type: 'radar',
             emphasis: {
               lineStyle: {
@@ -782,8 +788,8 @@ export default {
               {name: 'Energy Recharge', max: 1.5},
               {name: 'Elemental Mastery', max: 120},
               {name: 'Healing Bonus', max: 0.3},
-              {name: 'Shield', max: 50},
-              {name: 'Ancillary', max: 50},
+              // {name: 'Shield', max: 50},
+              // {name: 'Ancillary', max: 50},
             ],
             center: ['50%', '50%'], // 根据需要调整位置
             radius: 120,
@@ -815,7 +821,7 @@ export default {
         ],
             series: [
           {
-            name: 'rate',
+            name: 'Character detail',
             type: 'radar',
             emphasis: {
               lineStyle: {
@@ -1033,7 +1039,7 @@ export default {
 }
 
 .vsavatar:hover {
-  transform: scale(1.04);
+  transform: scale(1.00);
 }
 
 

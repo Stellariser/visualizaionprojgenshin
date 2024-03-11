@@ -180,7 +180,8 @@ return {
   TSchart: null,
   TSoption : {
       title: {
-      text: 'Team Score'
+      text: 'Team Score',
+      subtext: 'The overall performance of Attack, Health, Defense, length of DamageCycle, and Cost'
       },
       tooltip: {
       show: true,
@@ -232,6 +233,10 @@ return {
   DCyaxis: [0,75],
   DCchart: null,
   DCoption : {
+    title: {
+      text: 'Damage Cycle',
+      subtext: 'When to activate whose skills in a damage cycle, to maximize the damage'
+      },
       
       tooltip: {
       // trigger: 'axis',
@@ -241,11 +246,14 @@ return {
       // }
       
       },
-      legend: {},
+      legend: {
+        left: 'center', // 左右位置
+        bottom: '0%'   // 上下位置
+      },
       grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
+      bottom: '10%',
       containLabel: true
       },
       xAxis: {
@@ -993,7 +1001,7 @@ methods: {
       yAxisIndex: 1,
       symbolSize: 30,
       symbol: 'rect', // 设置散点形状为长方形
-      symbolSize: [33, 40], // 设置长方形的长宽比
+      symbolSize: [25, 37], // 设置长方形的长宽比
       itemStyle: {
       color: 'green',
       opacity: 0.2,
