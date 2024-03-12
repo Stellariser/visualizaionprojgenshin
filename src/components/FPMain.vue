@@ -23,7 +23,7 @@
             @open="handleOpen"
             @close="handleClose"
             background-color="#a9d7fa"
-            text-color="#ebebeb"
+            text-color="#000000"
             active-text-color="#409EFF"
             router>
           <!--一级菜单1-->
@@ -38,6 +38,10 @@
           <el-menu-item index="/team">
             <i class="el-icon-s-data"></i>
             <span slot="title">Team</span>
+          </el-menu-item>
+          <el-menu-item index="/about">
+            <i class="el-icon-s-data"></i>
+            <span slot="title">About</span>
           </el-menu-item>
           <div class="avatars-container">
             <!-- 遍历selectedRoles数组，为每个角色渲染一个头像 -->

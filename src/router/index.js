@@ -20,6 +20,7 @@ import FPMain from "@/components/FPMain";
 import Characters from "@/components/New/Characters";
 import RecommendTeams from '@/components/New/RecommendTeams'
 import team from '@/components/New/team'
+import About from '@/components/New/About'
 Vue.use(VueRouter)
 
 const routes = [
@@ -53,6 +54,11 @@ const routes = [
             { path: '/home/myPost', component: myPostList},
             { path: '/home/postCollection', component: postCollection},
             { path: '/home/notificationBoard', component: notificationBoard},
+            { 
+                path: '/about', 
+                name:'About',
+                component: About
+            },
         ]
     },
     { path: '/*', redirect: '/404' }
