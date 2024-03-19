@@ -57,12 +57,27 @@
 
     <h2 style="text-align:center">What We Do</h2>
     <div class="text-box">
-      <p><strong>GenSynergy is a team paring tool for Genshin Impact players. We provide various statistics for different Genshin Impact characters (see more by clicking on the radar chart) and enable users to pick characters by clicking on the character image. After picking up the characters, you can view our analysis of your choice on the 'team' page which could help your final decision. We also provide some recommendations for those rookie players.</strong></p>
+      <p><strong>GenSynergy is a team paring tool for Genshin Impact players. We provide various statistics for different Genshin Impact characters (see more by clicking on the radar chart) and enable users to pick characters by clicking on the character image. After picking up the characters, you can view our analysis of your choice on the 'team' page which could help your final decision. We also provide some recommendations for those rookie players. Our work is based on previous findings on the visualization of video games [1], [3], [4] and on the analysis of data science of video games and game wiki production [2], [5].</strong></p>
     </div>
 
-    <h2 style="text-align:center">Data</h2>
+    <h2 style="text-align:center">Data & Source Code</h2>
     <div class="text-box">
-      <p><strong>Our project is based on the "Genshin Impact - Teyvat Character Analysis" dataset available on Kaggle. This dataset provides an extensive compilation of character data from Genshin Impact, offering valuable insights into various statistics and attributes of the characters. Check more at <a href="https://www.kaggle.com/code/faryarmemon/genshin-impact-tevyant-character-analysis" target="_blank">Kaggle</a>.</strong></p>
+      <p><strong>Our project is based on the "Genshin Impact - Teyvat Character Analysis" dataset available on Kaggle. This dataset provides an extensive compilation of character data from Genshin Impact, offering valuable insights into various statistics and attributes of the characters. Check more at <a href="https://www.kaggle.com/code/faryarmemon/genshin-impact-tevyant-character-analysis" target="_blank">Kaggle</a>. We have uploaded the complete code to Github, you can check more at <a href="https://github.com/Stellariser/visualizaionprojgenshin/tree/master" target="_blank">Github</a>.</strong></p>
+    </div>
+
+    <h2 style="text-align:center">Learning Objectives</h2>
+    <div class="text-box">
+      <p><strong>1. Design: We have collaboratively designed and developed an interactive visualization website for Genshin Impact, enabling users to freely construct teams from various characters and provide a deep analysis of their team compositions. We implemented interactive data transformations to visualize team dynamics and character stats effectively.
+    We utilized visual mappings to represent character attributes and team synergies, enhancing user engagement and understanding. And we crafted view transformations that allow users to explore different team compositions through various data-driven lenses.</strong></p>
+      <p><strong>2. Defend: We used Vue.js for constructing an interactive and user-friendly interface. We used GitHub for project management, version control, and collaboration.</strong></p>
+      <p><strong>3. Critique: We have enhanced our critical thinking and analytical skills by identifying strengths and areas for improvement in peer projects. We contributed valuable feedback to peers, leading to a collaborative learning environment and driving mutual improvement.</strong></p>
+      <p><strong>4. Demonstrate: We have adapted our presentation techniques to effectively communicate complex information in an agreeable way. We utilized our website’s interactive features during demonstrations to engage our audience and provide hands-on experience with our visualization tools.</strong></p>
+      <p><strong>5. Evaluate: We have implemented user feedback mechanisms within our website to gather insights on user experience and satisfaction. We analyzed received feedback to identify trends and specific areas for improvement, demonstrating our commitment to continuous development and user-friendly design.</strong></p>
+    </div>
+
+    <h2 style="text-align:center">Demo Video</h2>
+    <div class="video-container">
+      <iframe width="840" height="473" src="https://www.youtube.com/embed/eMWUdpWNJrI?si=6D7fpViYLQKO2PHS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
 
     <h2 style="text-align:center">Reference</h2>
@@ -72,11 +87,6 @@
       <p><strong>3. Medler, Ben, and Brian Magerko. "Analytics of play: Using information visualization and gameplay practices for visualizing video game data." Parsons Journal for Information Mapping 3.1 (2011): 1-12.</strong></p>
       <p><strong>4. Moura, Dinara, Magy Seif El-Nasr, and Christopher D. Shaw. "Visualizing and understanding players' behavior in video games: discovering patterns and supporting aggregation and comparison." ACM SIGGRAPH 2011 game papers. 2011. 1-6.</strong></p>
       <p><strong>5. El-Nasr MS, Nguyen TH, Canossa A, Drachen A. Game data science. Oxford University Press; 2021 Sep 30.</strong></p>
- 
-    </div>
-    <h2 style="text-align:center">Demo Video</h2>
-    <div class="video-container">
-      <iframe width="840" height="473" src="https://www.youtube.com/embed/eMWUdpWNJrI?si=6D7fpViYLQKO2PHS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
 
   </div>
