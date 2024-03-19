@@ -138,6 +138,7 @@ import Papa from 'papaparse';
 import * as echarts from "echarts";
 
 
+
 export default {
   mounted() {
 
@@ -167,6 +168,7 @@ export default {
   name: 'CardLayout',
   data() {
     return {
+
       currentlengh: 0,
 
       dialogid: 0,

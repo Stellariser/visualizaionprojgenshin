@@ -74,6 +74,10 @@
       <p><strong>5. El-Nasr MS, Nguyen TH, Canossa A, Drachen A. Game data science. Oxford University Press; 2021 Sep 30.</strong></p>
  
     </div>
+    <h2 style="text-align:center">Demo Video</h2>
+    <div class="video-container">
+      <iframe width="840" height="473" src="https://www.youtube.com/embed/eMWUdpWNJrI?si=6D7fpViYLQKO2PHS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
 
   </div>
 </template>
@@ -88,6 +92,10 @@ export default {
 body {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
+}
+.video-container {
+  max-width: 900px; /* 最大宽度，可调整 */
+  margin: 20px auto; /* 上下边距 20px，左右自动居中 */
 }
 
 *, *:before, *:after {
